@@ -792,7 +792,7 @@ button, .card { touch-action: manipulation; -webkit-tap-highlight-color: transpa
 </head>
 <body>
   <div id="app"></div>
-  <div class="build-tag">Bridge Quest · version 2026-11-14 (8) · 20 lessons · duplicate</div>
+  <div class="build-tag">Bridge Quest · version 2026-11-14 (9) · 21 lessons · duplicate</div>
   <noscript>Bridge Quest needs JavaScript turned on.</noscript>
   <!-- Duplicate MiniBridge: the address of the results server.  Leave it empty ('') to hide the Duplicate tile. -->
   <script>window.BQ_SERVER = 'https://bridgequest-server-production.up.railway.app';</script>
@@ -1697,6 +1697,15 @@ window.BQ_LADDERS = {
         It asks partner: “bid your <b>longest major</b>.” Then you bid game.</div>
       <div class="callout c-teal"><b>Doubler’s second bid:</b> usually <b>Pass</b>. Bid again with <b>16+ HCP</b>, or when partner <b>jumped</b> or <b>cuebid</b>.<br>
         Partner made a free bid and they bid again? <b>Raise with 4-card support</b>, so partner knows about the fit.</div>`,
+  },
+  ocvx: {
+    name: 'Overcall or Double? Guide',
+    html: `<div class="callout c-black"><b>1. A good 5-card suit?</b> → <b>OVERCALL</b> it.<br>10-5-2: 10+ HCP · 5+ cards · 2 good honors (a 6-card suit can have just one)</div>
+      <div class="callout blue"><b>2. Short in THEIR suit, with the other suits?</b> → <b>DOUBLE (X)</b>. Needs 11+ HCP.<br>
+        They bid ONE suit → 0, 1 or 2 cards in it, and 3+ in each of the other three<br>
+        They bid TWO suits → 4+ cards in each of the two unbid suits</div>
+      <div class="callout c-green"><b>3. Balanced, 15–18 HCP, with a stopper in their suit?</b> → overcall <b>1NT</b>.</div>
+      <div class="callout c-red"><b>4. None of these?</b> → <b>PASS</b> — even with 13 or 14 HCP. Pass is a bid too!</div>`,
   },
   leads: {
     name: 'Opening Lead Guide',
@@ -3940,6 +3949,82 @@ BQ_LESSONS.basics = {
 
 </script>
   <script>
+/* JumpStart 2 · Overcall or Double? (Class 12).  19 graded + challenge.
+   The six practice hands from the JumpStart 2 manual, pages 28-29, plus more hands that follow the same rules.
+   Hands that fit BOTH an overcall and a takeout double are left out on purpose (see README) — every hand here fits only one. */
+(function () {
+  const R = 'ocvx';
+  const O1 = (o) => [{ who: 'Opponent', b: o }, { who: 'You', b: '?' }];
+  const O2 = (o, r) => [{ who: 'Opponent', b: o }, { who: 'Partner', b: 'P' }, { who: 'Opponent', b: r }, { who: 'You', b: '?' }];
+  const bid = (kicker, hand, auction, a, why, extra) => Object.assign({ t: 'bid', kicker, hand, auction, a, check: 'compete', why, ladder: R, levels: 3, dbl: true, q: 'What do you bid?' }, extra);
+
+  BQ_LESSONS.ocvx = {
+    id: 'ocvx', icon: '⚖️', title: 'Overcall or Double?',
+    steps: [
+      {
+        t: 'teach', title: 'Two ways into the auction',
+        owl: 'They opened the bidding, and you have a nice hand too. Do you OVERCALL or DOUBLE? The answer is in your SHAPE!',
+        html: `<div class="callout c-black"><b>OVERCALL</b> = “I have a good suit of my own.”<br>Think <b>10-5-2</b>: 10+ HCP · a suit of 5+ cards · 2 good honors in it</div>
+          <div class="callout blue"><b>TAKEOUT DOUBLE (X)</b> = “Partner, you pick the suit.”<br>11+ HCP · <b>short</b> in their suit (0, 1 or 2 cards) · 3+ cards in each of the other suits</div>
+          <p class="big">Ask yourself two questions:</p>
+          <ul><li><b>Do I have a good 5-card suit?</b> → Overcall it.</li>
+            <li><b>Am I short in THEIR suit, with cards in all the others?</b> → Double.</li></ul>`,
+      },
+      {
+        t: 'mc', kicker: 'Which is which?', q: 'Which bid promises a suit of 5 or more cards?', ladder: R,
+        choices: ['An overcall', 'A takeout double', 'Both of them'], a: 0, layout: 'wide',
+        why: 'An overcall shows YOUR suit: 5+ cards with 2 good honors. A takeout double shows the opposite — no long suit, but support for whatever partner picks.',
+      },
+      {
+        t: 'mc', kicker: 'Which is which?', q: 'Which bid says “Partner, I am short in their suit — you choose one of the others”?', ladder: R,
+        choices: ['A takeout double (X)', 'An overcall', 'Pass'], a: 0, layout: 'wide',
+        why: 'The takeout double asks partner to pick. In the bidding box it is the red card marked X.',
+      },
+      bid('They opened 1♣', 'K765.KQ73.A943.2', O1('1C'), 'X', '12 HCP, a singleton club, and 4 cards in every other suit. No 5-card suit to overcall — a perfect takeout double.', { whyWrong: { '1H': 'An overcall shows 5+ cards. You have only four hearts.', '1S': 'An overcall shows 5+ cards. You have only four spades.' } }),
+      bid('They opened 1♣', 'Q765.AK732.A3.54', O1('1C'), '1H', '13 HCP and five hearts headed by the A-K: 10-5-2, overcall 1♥. (Not a double — you have only two diamonds.)', { whyWrong: { X: 'A double promises 3+ cards in EVERY unbid suit. You have only two diamonds — partner might pick them!' } }),
+      bid('They opened 1♦', '83.AQJ96.K4.T752', O1('1D'), '1H', '10 HCP, five hearts with three good honors: 10-5-2 → overcall 1♥.', { whyWrong: { P: '10 HCP is enough to overcall at the 1-level with such a good suit.', X: 'A double needs 11+ HCP and support for all the other suits. You have only two spades.' } }),
+      bid('They opened 1♥', 'A975.4.KQ83.QJ62', O1('1H'), 'X', '12 HCP, a singleton heart, and four cards in each of the other suits → takeout double.', { whyWrong: { '1S': 'An overcall shows 5+ cards. You have only four spades — let partner choose.' } }),
+      bid('They opened 1♥', 'K4.Q8.AJ752.K943', O1('1H'), '2D', '13 HCP and five diamonds with the A-J. You have to go to the 2-level, but 13 HCP is plenty: 2♦.', { whyWrong: { X: 'A double promises 3+ spades — partner will often bid them, and you have only two.' } }),
+      {
+        t: 'teach', title: 'When neither one fits: PASS',
+        html: `<p>Sometimes you have a good hand — even 13 or 14 HCP — but:</p>
+          <ul><li>no 5-card suit to overcall, <b>and</b></li><li>too many cards in <b>their</b> suit to double.</li></ul>
+          <div class="callout c-red"><b>Then you pass.</b> Pass is a bid too! It does not mean “I have nothing” — it means “my hand doesn’t fit an overcall or a double.”</div>
+          <p>Your points are not wasted. They will take tricks on defense, and you may get another chance to bid later.</p>`,
+      },
+      {
+        t: 'mc', kicker: 'Do I have to bid?', q: 'They open, and you hold 14 HCP. Do you HAVE to bid?', ladder: R, layout: 'wide',
+        choices: ['No — if my hand fits neither an overcall nor a double, I pass', 'Yes — with 14 HCP you must always bid', 'Yes — always double with 14'], a: 0,
+        why: 'Points alone are not enough. You need the right SHAPE: a good 5-card suit to overcall, or shortness in their suit to double.',
+      },
+      bid('They opened 1♣', 'AQ5.K83.Q742.J63', O1('1C'), 'P', '12 HCP, but no 5-card suit, and three clubs is too many to double. Pass.', { whyWrong: { X: 'You are not short in clubs, so it is not a takeout double.', '1D': 'An overcall shows 5+ cards. You have four diamonds.' } }),
+      bid('They opened 1♦', 'KJ53.A4.QJ82.K73', O1('1D'), 'P', '14 HCP — but four cards in THEIR suit, and no 5-card suit of your own. Pass, and enjoy defending!', { whyWrong: { X: 'With four diamonds you are not short in their suit. And partner would pick hearts — you have only two!', '1S': 'An overcall shows 5+ cards. You have four spades.' } }),
+      bid('They opened 1♠', 'K75.KQ732.A943.2', O1('1S'), '2H', '12 HCP and five hearts headed by the K-Q → overcall 2♥. (Not a double: you have three spades.)', { whyWrong: { X: 'With three spades you are not short in their suit. Show your hearts instead.' } }),
+      bid('They opened 1♠', 'T8.KJ4.AQ73.K952', O1('1S'), 'X', '13 HCP, only two spades, and 3+ cards in hearts, diamonds and clubs. No 5-card suit → takeout double.', { whyWrong: { '2D': 'An overcall shows 5+ cards. You have four diamonds.', '2C': 'An overcall shows 5+ cards. You have four clubs.' } }),
+      bid('They opened 1♠', 'Q4.KJT985.A3.862', O1('1S'), '2H', '10 HCP and SIX hearts with three good honors → overcall 2♥.', { whyWrong: { P: 'A six-card suit this good is worth showing.', X: 'A double needs 11+ HCP and support for the other suits. You have a one-suited hand.' } }),
+      bid('They opened 1♠', 'Q73.AKQ3.J653.42', O1('1S'), 'P', '12 HCP, but no 5-card suit (hearts is only four), three spades is too many to double — and you have only two clubs. Pass.', { whyWrong: { '2H': 'An overcall shows 5+ cards. A-K-Q-3 is pretty, but it is only four!', X: 'A double promises 3+ clubs and shortness in spades. You have neither.' } }),
+      {
+        t: 'teach', title: 'When they have bid TWO suits',
+        html: `<p>The opponents open, partner passes, and the next opponent bids a <b>new</b> suit. Now only <b>two</b> suits are left.</p>
+          <div class="callout blue"><b>Double</b> now shows the two <b>unbid</b> suits, with <b>4+ cards in each</b> (and 11+ HCP).</div>
+          <div class="callout c-black"><b>Overcall</b> is the same as always: 10-5-2 in one of the unbid suits.</div>
+          <p>Only ONE of the unbid suits? You can’t double — overcall it if it is long enough, or pass.</p>`,
+      },
+      bid('They bid clubs and spades', 'K765.KQ73.A943.2', O2('1C', '1S'), 'X', 'The unbid suits are hearts and diamonds, and you have four of each with 12 HCP → double.', { whyWrong: { '2H': 'An overcall shows 5+ cards. With four hearts AND four diamonds, double and let partner choose.' } }),
+      bid('They bid clubs and spades', '75.A873.AQ653.42', O2('1C', '1S'), '2D', '10 HCP and five diamonds with the A-Q → overcall 2♦. (Not a double: that needs 11+ HCP.)', { whyWrong: { X: 'Close — you do have both unbid suits. But a double needs 11+ HCP, and you have 10. Show your five-card suit instead.' } }),
+      bid('They bid clubs and hearts', 'AK84.7.KQ93.J852', O2('1C', '1H'), 'X', 'The unbid suits are spades and diamonds: four of each, and 13 HCP → double.', { whyWrong: { '1S': 'An overcall shows 5+ cards. You have four spades — and four diamonds too. Double shows both.' } }),
+      bid('They bid clubs and hearts', 'AKJ84.7.Q93.J852', O2('1C', '1H'), '1S', 'Five spades with A-K-J and 11 HCP → overcall 1♠. (Not a double: you have only three diamonds.)', { whyWrong: { X: 'A double here promises 4+ cards in BOTH unbid suits. You have only three diamonds.' } }),
+      bid('They bid clubs and spades', 'KJ7.A84.Q852.K63', O2('1C', '1S'), 'P', '13 HCP, but only three hearts (a double needs four of each) and no 5-card suit. Pass.', { whyWrong: { X: 'A double here promises 4+ hearts AND 4+ diamonds. You have only three hearts.', '2D': 'An overcall shows 5+ cards. You have four diamonds.' } }),
+      bid('', 'AJ4.KQ5.K973.Q82', O1('1H'), '1N',
+        '15 HCP and a balanced hand with hearts well stopped (K-Q-5). No 5-card suit, and three hearts is too many to double — but there is a THIRD way in: the <b>1NT overcall</b>! It shows 15–18 HCP, a balanced hand and a stopper in their suit, just like opening 1NT.',
+        { q: 'They opened 1♥. What do you bid?', challenge: true, kicker: '', challengeNote: 'No 5-card suit, and not short in hearts… so is it a pass? Count your points and look at your shape again.',
+          whyWrong: { P: 'With 15 HCP there is something better than pass. Remember the Overcalls lesson?', X: 'You have three hearts — not short in their suit.', '2D': 'An overcall in a suit shows 5+ cards. You have four diamonds.' } }),
+    ],
+  };
+})();
+
+</script>
+  <script>
 /* Card Play 5: Listen to the Auction.  13 graded + challenge.
    An original lesson in the style of Card Play 1-4 (the JumpStart 2 manual has no card-play class for this).
    Idea: every bid and every pass tells declarer where the missing high cards are.
@@ -4289,6 +4374,21 @@ BQ_LESSONS.basics = {
     player() { return this.data.players.find((p) => p.id === this.data.currentId) || null; },
   };
 
+  /* ---------------- shared progress ----------------
+     When a results server is set (window.BQ_SERVER in index.html), each player's lesson results are also copied there,
+     so the teacher can see everyone's progress from any device on the Grown-ups page. */
+  const SERVER = String(window.BQ_SERVER || '').replace(/\/+$/, '');
+  let lastSync = '';
+  function syncProgress() {
+    const p = store.player();
+    if (!SERVER || !p || !window.fetch) return;
+    if (!Object.keys(p.results || {}).length && !p.mini) return;          // nothing to report yet
+    const body = JSON.stringify({ id: p.id, name: p.name, avatar: p.avatar, results: p.results || {}, mini: p.mini || null });
+    if (body === lastSync) return;
+    fetch(SERVER + '/api/progress', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true })
+      .then((r) => { if (r.ok) lastSync = body; }).catch(() => { /* offline: it goes up next time */ });
+  }
+
   /* ---------------- grading ---------------- */
   function gradeFor(pct) {
     if (pct >= 90) return 'A';
@@ -4382,6 +4482,7 @@ BQ_LESSONS.basics = {
   function showMap() {
     const p = store.player();
     if (!p) return showHome();
+    syncProgress();
     const KIND = { bid: 'Bidding', play: 'Card Play', defense: 'Defense', review: 'Review', boss: 'Final Boss' };
     const tiles = COURSE.map((c, idx) => {
       const L = LESSONS[c.id];
@@ -4937,6 +5038,7 @@ BQ_LESSONS.basics = {
       if (!r.best || pct > r.best.pct || (pct === r.best.pct && challenge && !r.best.challenge)) { r.best = entry; newBest = true; }
       else if (challenge && !r.best.challenge) { r.best.challenge = true; }
       store.save();
+      syncProgress();
     }
     const mins = Math.floor(secs / 60), s2 = secs % 60;
     const review = R.missed.length ? `<div class="review"><h3>${OWL} Let’s remember these:</h3>${R.missed.map((m) =>
@@ -4976,21 +5078,40 @@ BQ_LESSONS.basics = {
   function showGrownups() {
     const built = COURSE.filter((c) => LESSONS[c.id]);
     const ps = store.data.players;
-    const rows = ps.map((p) => `<tr><td class="nm">${p.avatar} ${esc(p.name)}</td>${built.map((c) => {
+    const cells = (p) => built.map((c) => {
       const r = p.results && p.results[c.id];
       if (!r || !r.best) return '<td class="muted">—</td>';
-      const last = r.history[r.history.length - 1];
-      return `<td title="Best ${r.best.pct}% · ${r.attempts} attempt(s) · last ${last.pct}% on ${new Date(last.date).toLocaleDateString()}">
+      const last = (r.history && r.history[r.history.length - 1]) || r.best;
+      return `<td title="${esc(p.name)} · ${esc((c.short || c.title).replace(/<[^>]+>/g, ''))}: best ${r.best.pct}% · ${r.attempts} attempt(s) · last ${last.pct}% on ${new Date(last.date).toLocaleDateString()}">
         <span class="mini-grade ${gradeCls(r.best.grade)}">${r.best.grade}</span> ${r.best.pct}%${r.best.challenge ? ' 🏆' : ''}<div class="muted" style="font-size:.8rem">${r.attempts}×</div></td>`;
-    }).join('')}<td><button class="btn ghost small" data-del="${p.id}">Delete</button></td></tr>`).join('');
+    }).join('');
+    const head = (extra, first = '') => `<tr><th>Player</th>${first}${built.map((c) => `<th>${c.icon}<br>${fmt(c.short || c.title)}</th>`).join('')}${extra}</tr>`;
+    const wireTips = () => app.querySelectorAll('table.scores td[title]').forEach((td) => (td.onclick = () => { if (TOUCH) toast(esc(td.title)); }));
+    const rows = ps.map((p) => `<tr><td class="nm">${p.avatar} ${esc(p.name)}</td>${cells(p)}<td><button class="btn ghost small" data-del="${p.id}">Delete</button></td></tr>`).join('');
     render(`<div class="wrap"><div class="panel">
       <h2>👩‍🏫 Scoreboard</h2>
       <p class="muted">Best grade for each player on this ${TOUCH ? 'device (tap a grade for details)' : 'computer (hover for details)'}. 🏆 = solved the challenge problem. Scores are saved in this browser only.</p>
-      ${ps.length ? `<div style="overflow-x:auto"><table class="scores"><tr><th>Player</th>${built.map((c) => `<th>${c.icon}<br>${fmt(c.short || c.title)}</th>`).join('')}<th></th></tr>${rows}</table></div>` : '<p>No players yet.</p>'}
+      ${ps.length ? `<div style="overflow-x:auto"><table class="scores">${head('<th></th>')}${rows}</table></div>` : '<p>No players yet.</p>'}
       <div class="row" style="margin-top:18px">
         <button class="btn" id="gu-csv">⬇️ Download scores (CSV)</button>
         <button class="btn ghost" id="gu-back">Back</button>
-      </div></div></div>`);
+      </div>
+      ${SERVER ? `<h2 style="margin-top:26px">🌍 Everyone — all devices</h2>
+        <p class="muted">Every player who has finished a lesson on any phone or computer, most recent first. It updates each time someone finishes a lesson.</p>
+        <div id="gu-all"><p class="muted">Loading…</p></div>` : ''}
+      </div></div>`);
+    if (SERVER && window.fetch) {
+      fetch(SERVER + '/api/progress').then((r) => r.json().then((d) => ({ ok: r.ok, d }))).then(({ ok, d }) => {
+        const box = document.getElementById('gu-all'); if (!box) return;
+        if (!ok) { box.innerHTML = `<div class="callout c-red">${esc((d && d.error) || 'The server had a problem.')}</div>`; return; }
+        if (!d.players.length) { box.innerHTML = '<p>Nobody has finished a lesson yet.</p>'; return; }
+        const done = (p) => built.filter((c) => p.results && p.results[c.id] && p.results[c.id].best).length;
+        box.innerHTML = `<p><b>${d.players.length}</b> player${d.players.length > 1 ? 's' : ''}.</p>
+          <div style="overflow-x:auto"><table class="scores">${head('<th>🎲<br>hands</th>', '<th>Lessons<br>done</th><th>Last<br>active</th>')}
+          ${d.players.map((p) => `<tr><td class="nm">${esc(p.avatar || '')} ${esc(p.name)}</td><td style="white-space:nowrap"><b>${done(p)}</b> / ${built.length}</td><td style="white-space:nowrap">${new Date(p.updatedAt).toLocaleDateString()}</td>${cells(p)}<td>${(p.mini && p.mini.hands) || '—'}</td></tr>`).join('')}</table></div>`;
+        wireTips();
+      }).catch(() => { const box = document.getElementById('gu-all'); if (box) box.innerHTML = '<div class="callout c-red">Can’t reach the server right now. Check the internet connection and open this page again.</div>'; });
+    }
     app.querySelectorAll('[data-del]').forEach((b) => (b.onclick = () => {
       const p = ps.find((x) => x.id === b.dataset.del);
       if (p) askConfirm(`Delete ${p.name} and all their scores?`, 'Delete', () => {
@@ -4999,7 +5120,7 @@ BQ_LESSONS.basics = {
         store.save(); showGrownups();
       });
     }));
-    app.querySelectorAll('table.scores td[title]').forEach((td) => (td.onclick = () => { if (TOUCH) toast(esc(td.title)); }));
+    wireTips();
     document.getElementById('gu-csv').onclick = downloadCSV;
     document.getElementById('gu-back').onclick = () => (store.player() ? showMap() : showHome());
   }
