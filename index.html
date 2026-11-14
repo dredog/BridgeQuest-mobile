@@ -441,6 +441,9 @@ button.card.playable:hover { z-index: 3; }
    so the desktop layout is untouched.  Phone layout applies at 700px wide and below. */
 
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+/* which copy am I looking at?  shown at the bottom of every screen except while playing */
+.build-tag { text-align: center; color: rgba(255, 255, 255, .55); font-size: .75rem; padding: 0 10px 14px; }
+#app.playing ~ .build-tag { display: none; }
 /* a hand's suits are wrapped in one or two .hrow rows; on desktop the wrapper is invisible */
 .hrow { display: contents; }
 .hand .hrow:not(:last-child) .grp:last-child { margin-right: 10px; }
@@ -769,6 +772,7 @@ button, .card { touch-action: manipulation; -webkit-tap-highlight-color: transpa
 </head>
 <body>
   <div id="app"></div>
+  <div class="build-tag">Bridge Quest · version 2026-11-14 (7) · 20 lessons</div>
   <noscript>Bridge Quest needs JavaScript turned on.</noscript>
   <script>
 /* Bridge Quest - core bridge helpers and the camp's bidding rules.
