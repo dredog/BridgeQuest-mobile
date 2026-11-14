@@ -1583,6 +1583,19 @@ window.BQ_LADDERS = {
         <b>Stopper</b> in their suit: 8–10 → 1NT · 11–12 → 2NT<br>
         <b>None of the above → PASS</b></div>`,
   },
+  tox: {
+    name: 'Takeout Double Guide',
+    html: `<div class="callout c-black"><b>Making a takeout double</b> (an opponent opened a suit): <b>11+ HCP</b> and the right shape<br>
+        They bid <b>ONE</b> suit → <b>3+ cards</b> in each of the 3 unbid suits, and <b>short</b> in their suit (0, 1 or 2 cards)<br>
+        They bid <b>TWO</b> suits → <b>4+ cards</b> in each of the 2 unbid suits</div>
+      <div class="callout blue"><b>Advancing</b> (partner doubled)<br>
+        RHO <b>passed</b> → you <b>MUST</b> bid, even with 0 HCP! &nbsp;·&nbsp; RHO <b>bid</b> → you are allowed to pass<br>
+        Bid your <b>longest suit</b>. The <b>level</b> shows your strength:<br>
+        0–8 → cheapest level · 10–12 → <b>jump</b> one level · 12+ → think about game &nbsp;<span style="font-size:.95rem">(9 HCP: you choose)</span><br>
+        With 6+ HCP, a 4-card <b>major</b> is usually better than a longer minor.</div>
+      <div class="callout c-red">Don’t pick the <b>opponents’</b> suit as a place to play — partner is short there! Notrump is rarely right, too.</div>
+      <div class="callout c-teal"><b>Doubler’s second bid:</b> usually <b>Pass</b>. Bid again only with <b>16+ HCP</b>, or when partner <b>jumped</b>.</div>`,
+  },
   leads: {
     name: 'Opening Lead Guide',
     html: `<div class="callout c-black"><b>Which SUIT?</b><br>
@@ -3641,6 +3654,80 @@ BQ_LESSONS.basics = {
       bid('', 'AKQ74.632.852.74', OPP('1H'), '1S', null,
         'Only 9 HCP — one short of 10-5-2! But look at that suit: A-K-Q. Overcalling at the 1-level tells partner exactly what to <b>lead</b> if the opponents win the contract, and it uses up their bidding space. With a great suit like this, many experts stretch. (Pass is also fine — half a point.)',
         { q: 'Your opponent opened 1♥. Would you overcall?', ok: ['P'], challenge: true, challengeNote: 'One HCP short of the rule… but what is GREAT about this hand?', kicker: '' }),
+    ],
+  };
+})();
+
+</script>
+  <script>
+/* JumpStart 2 · Takeout Doubles (Class 10).  20 graded + challenge.  Practice hands from the JumpStart 2 manual, pages 10-15. */
+(function () {
+  const R = 'tox';
+  const O1 = (o) => [{ who: 'Opponent', b: o }, { who: 'You', b: '?' }];
+  const O2 = (o, r) => [{ who: 'Opponent', b: o }, { who: 'Partner', b: 'P' }, { who: 'Opponent', b: r }, { who: 'You', b: '?' }];
+  const ADV = (o) => [{ who: 'Opponent', b: o }, { who: 'Partner', b: 'X' }, { who: 'Opponent', b: 'P' }, { who: 'You', b: '?' }];
+  const bid = (kicker, hand, auction, a, check, why, extra) => Object.assign({ t: 'bid', kicker, hand, auction, a, check, why, ladder: R, levels: 4, dbl: true }, extra);
+  const ex = (title, lines, note) => `<div class="ex"><div class="ex-t">${title}</div><div class="hand-text">${lines}</div>${note ? `<div class="muted" style="font-size:.9rem;margin-top:4px">${note}</div>` : ''}</div>`;
+
+  BQ_LESSONS.takeoutx = {
+    id: 'takeoutx', icon: '❌', title: 'Takeout Doubles',
+    steps: [
+      {
+        t: 'teach', title: 'The takeout double: “Partner, you pick!”',
+        owl: 'Sometimes you have a good hand but no long suit to overcall. Then you DOUBLE — and partner chooses the suit!',
+        html: `<p>When an opponent <b>opens a suit</b> and you <b>double</b>, it is a <b>TAKEOUT DOUBLE</b>. It asks partner to <b>bid</b> one of the other suits.</p>
+          <div class="callout c-black"><b>They opened ONE suit</b> (1♣ – X):<br><b>11+ HCP</b> · <b>3+ cards in each of the 3 unbid suits</b> · <b>shortness</b> in their suit (0, 1 or 2 cards)</div>
+          <div class="callout blue"><b>They bid TWO suits</b> (1♣ – Pass – 1♠ – X):<br><b>11+ HCP</b> · <b>4+ cards in each of the 2 unbid suits</b></div>
+          <div class="example-row">${ex('They opened 1♣ → Double!', '♠ K 7 6 5<br>♥ K Q 7 3<br>♦ A 9 4 3<br>♣ 2', '12 HCP, support for every other suit, a singleton club.')}</div>`,
+      },
+      {
+        t: 'mc', kicker: 'What does it mean?', q: 'Your opponent opened 1♥ and you doubled. What did you tell partner?', layout: 'wide', ladder: R,
+        choices: ['11+ HCP, 3+ cards in ♠ ♦ ♣, and short hearts — please bid one of those', 'I have lots of hearts', 'I want to play 1♥ doubled', 'I have a weak hand'], a: 0,
+        why: 'A double of a suit opening is for TAKEOUT: it shows the OTHER three suits and asks partner to choose one.',
+      },
+      bid('They opened 1♣', 'K765.KQ73.A943.2', O1('1C'), 'X', 'compete', '12 HCP, 3+ cards in every other suit, and a singleton club. Perfect takeout double!', { q: 'What do you bid?' }),
+      bid('They opened 1♣', 'Q765.A73.AK93.52', O1('1C'), 'X', 'compete', '13 HCP, four spades, three hearts, four diamonds and only two clubs → takeout double.', { q: 'What do you bid?' }),
+      bid('They opened 1♣', 'Q765.A873.A53.42', O1('1C'), 'P', 'compete', 'Good shape, but only 10 HCP. A takeout double needs 11+. Pass.', { q: 'What do you bid?', whyWrong: { X: 'Close! But a takeout double promises 11+ HCP.' } }),
+      bid('They opened 1♣', 'Q765.AK73.A3.542', O1('1C'), 'P', 'compete', '13 HCP and both majors… but only two diamonds and THREE clubs. The rule wants 3+ in every unbid suit and shortness in theirs. Pass by the rule — though many experienced players would double with both majors (half a point).', { q: 'What do you bid?', ok: ['X'] }),
+      bid('They bid two suits', 'K765.KQ73.A943.2', O2('1C', '1S'), 'X', 'compete', 'They bid clubs and spades, so a double now shows the two UNBID suits — hearts and diamonds — with 4+ in each. You have K-Q-7-3 and A-9-4-3. Double!', { q: 'What do you bid?' }),
+      bid('They bid two suits', 'Q7.AK73.AQ73.542', O2('1C', '1S'), 'X', 'compete', '15 HCP and four cards in BOTH unbid suits (hearts and diamonds) → double.', { q: 'What do you bid?' }),
+      bid('They bid two suits', 'Q65.9873.AK93.A2', O2('1C', '1S'), 'X', 'compete', '13 HCP with four hearts and four diamonds — the two unbid suits. Double!', { q: 'What do you bid?' }),
+      bid('They bid two suits', 'Q765.AK73.A3.542', O2('1C', '1S'), 'P', 'compete', 'You need 4+ cards in BOTH unbid suits (hearts AND diamonds). You have only two diamonds. Pass.', { q: 'What do you bid?', whyWrong: { X: 'Partner might bid diamonds — and you have only two!' } }),
+      {
+        t: 'teach', title: 'Advancing a takeout double: you MUST bid!',
+        html: `<p>When partner doubles and your right-hand opponent (RHO) <b>passes</b>, you are <b>forced</b> to bid — even with 0 HCP! (If you pass, they play their contract doubled.)</p>
+          <div class="callout c-black"><b>Bid your LONGEST suit.</b> The <b>level</b> shows your strength:<br>
+            <b>0–8 HCP</b> → at the cheapest level · <b>10–12 HCP</b> → <b>jump</b> one level · <b>12+</b> → think about game<br>
+            <span class="muted" style="font-size:.95rem">(9 HCP is a judgment call — either is fine.)</span></div>
+          <div class="callout blue">With 6+ HCP, a <b>4-card major</b> is usually better than a longer minor — majors score more and you can often bid them lower.</div>
+          <div class="callout c-red">Never pick the <b>opponents’</b> suit — partner is short there! Notrump is rarely right, too.</div>`,
+      },
+      {
+        t: 'mc', kicker: 'Forced!', q: 'Partner doubled 1♦ and RHO passed. You have 2 HCP. What should you do?', layout: 'wide', ladder: R,
+        choices: ['Bid your longest suit at the cheapest level', 'Pass — I am too weak', 'Bid 1NT'], a: 0,
+        why: 'Partner’s double asks you to bid, and RHO passed, so you are FORCED. With a weak hand, bid your longest suit as cheaply as possible.',
+      },
+      bid('Partner doubled 1♣', '74.J73.J9543.652', ADV('1C'), '1D', 'advX', 'Only 2 HCP — but you must bid! Your longest suit is diamonds: 1♦.', { q: 'What do you bid?', whyWrong: { P: 'RHO passed, so you are forced to bid.' } }),
+      bid('Partner doubled 1♣', 'J753.987.73.A973', ADV('1C'), '1S', 'advX', 'Four spades and four clubs — but clubs is THEIR suit. Bid 1♠.', { q: 'What do you bid?', whyWrong: { '2C': 'Never bid the opponents’ suit — partner is short in clubs!' } }),
+      bid('Partner doubled 1♣', 'Q765.97643.3.532', ADV('1C'), '1H', 'advX', '2 HCP. Your longest suit is hearts (five) → 1♥.', { q: 'What do you bid?' }),
+      bid('Partner doubled 1♣', 'QJT765.AK73.3.42', ADV('1C'), '2S', 'advX', '10 HCP and six good spades. With 10–12, JUMP one level: 2♠ tells partner you have a good hand.', { q: 'What do you bid?', whyWrong: { '1S': '1♠ would show 0–8. With 10 HCP, jump!' } }),
+      bid('Partner doubled 1♣', 'Q765.A873.A53.42', ADV('1C'), '2H', 'advX', '10 HCP and two 4-card majors → jump in a major. 2♥ (the cheaper one) is fine; 2♠ is just as good.', { q: 'What do you bid?', ok: ['2S'] }),
+      bid('Partner doubled 1♦', '5.K973.652.A9432', ADV('1D'), '1H', 'advX', 'Five clubs and four hearts. With 6+ HCP, prefer the MAJOR: 1♥ — it is a cheaper bid and might find a heart fit.', { q: 'What do you bid?', ok: ['2C'] }),
+      bid('Partner doubled 1♦', '65.AK73.53.A8642', ADV('1D'), '2H', 'advX', '11 HCP: jump! Prefer the 4-card major to the 5-card minor: 2♥.', { q: 'What do you bid?', ok: ['3C'] }),
+      bid('Partner doubled 1♦', '875.K73.J93.A532', ADV('1D'), '2C', 'advX', '8 HCP and only one 4-card suit — clubs. Bid it at the cheapest level: 2♣.', { q: 'What do you bid?', whyWrong: { '1N': 'Notrump is rarely right after a takeout double. Bid your suit.' } }),
+      {
+        t: 'teach', title: 'The doubler’s second bid',
+        html: `<p>After advancer answers, the doubler usually <b>passes</b>. Advancer bid at the cheapest level, so you know where to play — and that partner is not strong.</p>
+          <div class="callout">Bid again only if:</div>
+          <ul><li>you have <b>extra strength</b> (16+ HCP), or</li><li>advancer showed a good hand by <b>jumping</b>.</li></ul>`,
+      },
+      bid('You doubled, partner answered 1♥', 'K765.KQ73.A943.2', [{ who: 'Opponent', b: '1C' }, { who: 'You', b: 'X' }, { who: 'Opponent', b: 'P' }, { who: 'Partner', b: '1H' }, { who: 'Opponent', b: 'P' }, { who: 'You', b: '?' }], 'P', null,
+        'Partner could have 0 HCP! You have a normal 12-point double. You found a heart fit — stop here: Pass.', { q: 'What do you bid now?', whyWrong: { '2H': 'Raising shows extra strength (16+). Partner may have nothing.' } }),
+      bid('You doubled, partner answered 1♥', 'AK65.KQ73.AJ43.2', [{ who: 'Opponent', b: '1C' }, { who: 'You', b: 'X' }, { who: 'Opponent', b: 'P' }, { who: 'Partner', b: '1H' }, { who: 'Opponent', b: 'P' }, { who: 'You', b: '?' }], '3H', null,
+        '17 HCP — real extra strength — and four hearts. Raise to 3♥ to invite: if partner has 6–8 HCP, there could be game.', { q: 'What do you bid now?', ok: ['2H'], whyWrong: { P: 'With 17 HCP and a fit you might have game. Tell partner!' } }),
+      bid('', 'KJ74.AQ83.K52.43', ADV('1C'), '2C', null,
+        '13 HCP and FOUR cards in both majors. You don’t know which major partner likes better… so bid THEIR suit: <b>2♣</b>! This is a <b>cuebid</b>. It says “I have a good hand (12+) and both majors — partner, pick your best major.” Then you can bid game.',
+        { q: 'Partner doubled 1♣ and RHO passed. What do you bid?', ok: ['2H', '2S'], challenge: true, challengeNote: 'You have 13 HCP and BOTH majors. Is there a way to ask partner which major is better?', kicker: '' }),
     ],
   };
 })();
