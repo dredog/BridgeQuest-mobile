@@ -352,6 +352,16 @@ table.auction4 td { text-align: center; padding: 4px 8px; font-weight: 900; font
 .example-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; margin: 8px 0; }
 .example-row .ex { background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 8px 12px; }
 .example-row .ex .ex-t { font-weight: 800; margin-bottom: 4px; }
+/* duplicate MiniBridge */
+.free-play.dup-tile { background: linear-gradient(90deg, #efe6ff, #fff); border-color: #7c3aed; margin-top: -8px; }
+.free-play.dup-tile .go { color: #6d28d9; }
+.dup-btns { margin-top: 14px; gap: 10px; }
+.dup-big { font-size: 3rem; font-weight: 900; color: var(--felt); line-height: 1.1; margin-top: 6px; }
+.dup-table { width: 100%; }
+.dup-table td, .dup-table th { text-align: center; }
+.dup-table tr.me td { background: #fff7e0; font-weight: 800; }
+.dup-pick tr[data-id] { cursor: pointer; }
+.dup-pick tr[data-id]:hover td { background: #eef6ff; }
 .bidbox .dbl .x { font-size: 1.25em; font-weight: 900; margin-right: 2px; }
 /* hands shown by seat: North above South; when defenders are shown, West on the left and East on the right */
 .example-row.ns { display: grid; grid-template-columns: minmax(230px, 1fr); width: fit-content; max-width: 100%; gap: 8px; }
@@ -699,30 +709,40 @@ button, .card { touch-action: manipulation; -webkit-tap-highlight-color: transpa
   .mb-trick .spot-mid { font-size: .7rem; padding: 0; line-height: 1.15; }
   .mb-trick .spot-mid b { font-size: 1rem; }
   .mb-msg { font-size: .9rem; }
-  .mb-last { grid-row: 5; }      /* (its one-row layout is in the 960px block below) */
   .led-dot { right: -6px; }
 
   /* grown-ups */
   table.scores { font-size: .88rem; }
+  table.dup-table { font-size: .86rem; }
+  table.dup-table th, table.dup-table td { padding: 7px 3px; }
+  table.dup-table th { font-size: .68rem; }
+  .dup-big { font-size: 2.6rem; }
+  .dup-btns { gap: 8px; }
+  .dup-btns .btn { padding: 11px 14px; font-size: 1rem; }
 }
 
-/* ---------- phones and narrow tablets: the previous trick can't sit in the corner without covering North's cards ---------- */
+/* ---------- the previous trick: one labelled row of four small cards, never on top of a hand ----------
+   wide screens: in the bar above the table (.top).   phones and narrow tablets: a row under the table (.bot). */
+.mb-last {
+  position: static; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 2px 10px; margin: 0;
+}
+.mb-last-t { text-align: left; line-height: 1.2; white-space: nowrap; }
+.mb-last-tt { display: flex !important; gap: 8px !important; width: auto; max-width: none; background: none; padding: 0 !important; }
+.mb-last-tt .spot { flex-direction: row; gap: 2px; }
+.mb-last-tt .spot::before { font-size: .7rem; font-weight: 800; color: var(--muted); }
+.mb-last-tt .spot-N::before { content: 'N'; } .mb-last-tt .spot-E::before { content: 'E'; }
+.mb-last-tt .spot-S::before { content: 'S'; } .mb-last-tt .spot-W::before { content: 'W'; }
+.mb-last-tt .spot-mid { display: none; }
+.mb-last.bot { display: none; }
+.mb-top { min-height: 56px; }                      /* room for the row, so the table doesn't jump when it appears */
 @media (max-width: 960px) {
   .topbar .chip-btn, .logo { white-space: nowrap; }
-  /* previous trick: a single labelled row under the table instead of a box in the corner */
-  .mb-last {
-    position: static; grid-column: 1 / -1; grid-row: 4; display: flex; align-items: center; justify-content: center;
-    gap: 10px; padding: 4px 8px; margin-top: 2px;
-  }
-  .mb-last-t { text-align: left; line-height: 1.2; }
-  .mb-last-tt { display: flex !important; gap: 8px !important; width: auto; max-width: none; background: none; padding: 0 !important; }
-  .mb-last-tt .spot { flex-direction: row; gap: 2px; }
-  .mb-last-tt .spot::before { font-size: .7rem; font-weight: 800; color: var(--muted); }
-  .mb-last-tt .spot-N::before { content: 'N'; } .mb-last-tt .spot-E::before { content: 'E'; }
-  .mb-last-tt .spot-S::before { content: 'S'; } .mb-last-tt .spot-W::before { content: 'W'; }
-  .mb-last-tt .spot-mid { display: none; }
+  .mb-top { min-height: 0; }
+  .mb-last.top { display: none; }
+  .mb-last.bot { display: flex; grid-column: 1 / -1; grid-row: 4; padding: 4px 8px; margin-top: 2px; }
+  .mb-last.bot .mb-last-t { white-space: normal; }
 }
-@media (max-width: 700px) { .mb-last { grid-row: 5; } }
+@media (max-width: 700px) { .mb-last.bot { grid-row: 5; } }
 
 /* very small phones */
 @media (max-width: 350px) {
@@ -772,8 +792,10 @@ button, .card { touch-action: manipulation; -webkit-tap-highlight-color: transpa
 </head>
 <body>
   <div id="app"></div>
-  <div class="build-tag">Bridge Quest · version 2026-11-14 (7) · 20 lessons</div>
+  <div class="build-tag">Bridge Quest · version 2026-11-14 (8) · 20 lessons · duplicate</div>
   <noscript>Bridge Quest needs JavaScript turned on.</noscript>
+  <!-- Duplicate MiniBridge: the address of the results server.  Leave it empty ('') to hide the Duplicate tile. -->
+  <script>window.BQ_SERVER = 'https://bridgequest-server-production.up.railway.app';</script>
   <script>
 /* Bridge Quest - core bridge helpers and the camp's bidding rules.
    Hands are written "spades.hearts.diamonds.clubs" with T for 10 and - for a void,
@@ -4376,9 +4398,12 @@ BQ_LESSONS.basics = {
     render(`<div class="wrap">
       <div class="hero"><h1>${p.avatar} ${esc(p.name)}’s Quest Map</h1><p>Pick a lesson. Each one takes about 10–15 minutes and ends with a ⭐ Challenge!</p></div>
       <button class="free-play" id="free-play"><span class="ic">🎲</span><span><b>Free Play: MiniBridge</b><br><span class="bl">Play whole hands against the computer — no bidding, just play!</span></span><span class="go">Play ▶</span></button>
+      ${window.BQ_MINI && window.BQ_MINI.hasDuplicate ? '<button class="free-play dup-tile" id="dup-play"><span class="ic">🏆</span><span><b>Duplicate MiniBridge</b><br><span class="bl">Play the same deals as everyone else and see how you compare!</span></span><span class="go">Play ▶</span></button>' : ''}
       <div class="map">${tiles}</div></div>`);
     app.querySelectorAll('.lesson-tile[data-id]').forEach((b) => (b.onclick = () => startLesson(b.dataset.id)));
     document.getElementById('free-play').onclick = () => window.BQ_MINI && window.BQ_MINI.start();
+    const dupTile = document.getElementById('dup-play');
+    if (dupTile) dupTile.onclick = () => window.BQ_MINI.duplicate();
   }
 
   /* ---------------- lesson runner ---------------- */
@@ -5039,19 +5064,22 @@ BQ_LESSONS.basics = {
     showAnnounce();
   }
   function header(extra) {
-    const ss = S.session;
+    const ss = S.session, dup = G && G.dup;
     return `<div class="lesson-head">
-      <button class="chip-btn" id="mb-quit" title="Back to the map">✕</button>
-      <div class="title">🎲 <span class="lbl-long">Free Play: </span>MiniBridge</div>
+      <button class="chip-btn" id="mb-quit" title="${dup ? 'Leave this board' : 'Back to the map'}">✕</button>
+      <div class="title">${dup ? `🏆 <span class="lbl-long">Duplicate · </span>Board ${dup.number}` : '🎲 <span class="lbl-long">Free Play: </span>MiniBridge'}</div>
       <div class="head-gap" style="flex:1"></div>
-      <div class="score-pill" title="Points this session">You ${ss.us} · Them ${ss.them}</div>
+      ${dup ? `<div class="score-pill" title="Your username">👤 ${esc(dup.user)}</div>` : `<div class="score-pill" title="Points this session">You ${ss.us} · Them ${ss.them}</div>`}
       ${extra || ''}
     </div>`;
   }
   function wireQuit() {
     document.getElementById('mb-quit').onclick = () => {
-      const leave = () => { Q.setBusy(false); Q.showMap(); };
-      if (G && G.st && G.st.history.length < 13) Q.askConfirm('Leave this hand?', 'Leave', leave); else leave();
+      const dup = G && G.dup;
+      const leave = () => { Q.setBusy(false); if (dup) dupHome(); else Q.showMap(); };
+      if (G && G.st && G.st.history.length < 13) Q.askConfirm(dup ? 'Leave this board? You will get the same board again next time.' : 'Leave this hand?', 'Leave', leave);
+      else if (dup && !G.done) Q.askConfirm('Leave this board? You will get the same board again next time.', 'Leave', leave);
+      else leave();
     };
   }
   function handRow(seat, opts = {}) {
@@ -5075,13 +5103,13 @@ BQ_LESSONS.basics = {
   }
 
   function showAnnounce() {
-    const m = G.m, order = [];
-    let s = S.dealer; for (let i = 0; i < 4; i++) { order.push(s); s = P.nextSeat(s); }
+    const m = G.m, order = [], dup = G.dup, dealer = dup ? 'S' : S.dealer;
+    let s = dealer; for (let i = 0; i < 4; i++) { order.push(s); s = P.nextSeat(s); }
     const ns = m.hcp.N + m.hcp.S, ew = m.hcp.E + m.hcp.W;
     const weDeclare = G.side === 'NS';
     Q.render(`<div class="wrap">${header()}
       <div class="panel">
-        <h2>🃏 New hand — ${SEATNAME[S.dealer]} dealt</h2>
+        <h2>${dup ? `🏆 Board ${dup.number} — everyone plays these same cards` : `🃏 New hand — ${SEATNAME[dealer]} dealt`}</h2>
         <p>Everyone counts their HCP and says it out loud, starting with the dealer:</p>
         <div class="row" style="gap:10px;margin-bottom:10px">${order.map((x) => `<div class="call ${x === 'S' ? 'you' : ''}" style="padding:8px 14px;border-radius:12px;background:#fff;border:2px solid var(--line)"><div class="who">${SEATNAME[x]}${x === 'S' ? ' (you)' : x === 'N' ? ' (partner)' : ''}</div><div class="b">${m.hcp[x]} HCP</div></div>`).join('')}</div>
         <div class="callout ${weDeclare ? 'c-green' : 'blue'}">North-South have <b>${ns}</b> · East-West have <b>${ew}</b>.<br>
@@ -5089,12 +5117,13 @@ BQ_LESSONS.basics = {
             : `East-West have more, so they declare: <b>${SEATNAME[m.declarer]}</b> is declarer. You and partner (North) are the <b>defenders</b> — try to set them!`}</div>
         <div class="hand-box"><div class="hand-label">Your hand (South) · ${m.hcp.S} HCP</div>${handRow('S')}</div>
         <div class="next-row" style="justify-content:space-between">
-          <div class="row"><label class="muted"><input type="checkbox" id="mb-declare" ${S.mode === 'declare' ? 'checked' : ''}> Give my side the stronger cards (declare every hand)</label></div>
+          <div class="row">${dup ? '<span class="muted">🚫🦉 No hints in duplicate — you are on your own!</span>' : `<label class="muted"><input type="checkbox" id="mb-declare" ${S.mode === 'declare' ? 'checked' : ''}> Give my side the stronger cards (declare every hand)</label>`}</div>
           <button class="btn green" id="mb-go">${weDeclare ? 'See dummy & choose the contract ▶' : 'Start the play ▶'}</button>
         </div>
       </div></div>`);
     wireQuit();
-    document.getElementById('mb-declare').onchange = (e) => { S.mode = e.target.checked ? 'declare' : 'mix'; };
+    const dc = document.getElementById('mb-declare');
+    if (dc) dc.onchange = (e) => { S.mode = e.target.checked ? 'declare' : 'mix'; };
     document.getElementById('mb-go').onclick = () => (weDeclare ? showContract() : computerContract());
   }
 
@@ -5118,7 +5147,7 @@ BQ_LESSONS.basics = {
           <div class="row" id="mb-level">${[1, 2, 3, 4, 5, 6, 7].map((l) => `<button class="btn ghost small" data-l="${l}">${l}</button>`).join('')}</div>
           <p id="mb-pick" class="big" style="margin:12px 0 4px">Contract: —</p>
           <div id="mb-advice"></div>
-          <div class="row" style="margin-top:10px"><button class="btn small" id="mb-owl">🦉 Owl’s advice</button><button class="btn green" id="mb-play" disabled>Play it! ▶</button></div>
+          <div class="row" style="margin-top:10px">${G.dup ? '' : '<button class="btn small" id="mb-owl">🦉 Owl’s advice</button>'}<button class="btn green" id="mb-play" disabled>Play it! ▶</button></div>
         </div></div></div></div>`);
     wireQuit();
     const upd = () => {
@@ -5129,7 +5158,8 @@ BQ_LESSONS.basics = {
     };
     document.querySelectorAll('#mb-strain button').forEach((b) => (b.onclick = () => { strain = b.dataset.s; upd(); }));
     document.querySelectorAll('#mb-level button').forEach((b) => (b.onclick = () => { level = +b.dataset.l; upd(); }));
-    document.getElementById('mb-owl').onclick = () => {
+    const owl = document.getElementById('mb-owl');
+    if (owl) owl.onclick = () => {
       document.getElementById('mb-advice').innerHTML = `<div class="callout blue">🦉 I would play <b>${bidHTML(sug.level + sug.strain)}</b>. ${fmt(sug.why)}</div>`;
       level = sug.level; strain = sug.strain; upd();
     };
@@ -5174,11 +5204,12 @@ BQ_LESSONS.basics = {
     const need = G.contract.level + 6;
     // the previous (finished) trick, shown small in the corner
     const prev = st.history[st.history.length - (G.pause ? 2 : 1)] || null;   // while the finished trick is still in the middle, the corner shows the one before
-    let lastBox = '';
+    let lastBox = () => '';
     if (prev) {
       const ps = {}; prev.cards.forEach((x) => (ps[x.seat] = x.card));
       const sp = (s) => `<div class="spot spot-${s} ${prev.winner === s ? 'won' : ''}">${cardHTML(ps[s][1], ps[s][0], { small: true })}${prev.cards[0].seat === s ? '<div class="led-dot">led</div>' : ''}</div>`;
-      lastBox = `<div class="mb-last"><div class="mb-last-t">Last trick · ${SEATNAME[prev.winner]} won</div>
+      // drawn twice: in the top bar on wide screens, under the table on phones — never over a hand
+      lastBox = (where) => `<div class="mb-last ${where}"><div class="mb-last-t">Last trick · ${SEATNAME[prev.winner]} won</div>
         <div class="trick-table mb-last-tt">${sp('N')}${sp('W')}<div class="spot-mid">#${st.history.length}</div>${sp('E')}${sp('S')}</div></div>`;
     }
     const ourSide = G.side === 'NS';
@@ -5188,10 +5219,11 @@ BQ_LESSONS.basics = {
         <div class="mb-top">
           <div class="contract-badge">Contract: <b>${contractText(G.contract)}</b> by ${SEATNAME[m.declarer]}</div>
           <div class="mb-count">Declarer ${declTricks} / ${need} needed &nbsp;·&nbsp; Defenders ${st.tricks[G.side === 'NS' ? 'EW' : 'NS']}</div>
-          ${mine ? '<button class="btn small" id="mb-hint">🦉 Hint</button>' : ''}
+          ${lastBox('top')}
+          ${mine && !G.dup ? '<button class="btn small" id="mb-hint">🦉 Hint</button>' : ''}
         </div>
         <div class="mb-table">
-          ${lastBox}
+          ${lastBox('bot')}
           ${seatBox('N')}${seatBox('W')}
           <div class="mb-mid"><div class="trick-table mb-trick">${spot('N')}${spot('W')}<div class="spot-mid">${G.contract.strain === 'N' ? '<b>NT</b>' : `Trump <b class="s-${G.contract.strain}">${SUITSYM[G.contract.strain]}</b>`}</div>${spot('E')}${spot('S')}</div>
             <div class="mb-msg">${fmt(msg || (mine ? `Your turn — play a card from <b>${SEATNAME[turn]}</b>${turn === m.dummy ? ' (dummy)' : ''}.` : turn ? `${SEATNAME[turn]} is thinking…` : ''))}</div></div>
@@ -5236,6 +5268,7 @@ BQ_LESSONS.basics = {
   /* ---------------- result ---------------- */
   function finish() {
     Q.setBusy(false);
+    if (G.dup) return dupFinish();
     const st = G.st, m = G.m, c = G.contract;
     const tricks = st.tricks[G.side];
     const sc = P.miniScore(c, tricks);
@@ -5271,7 +5304,187 @@ BQ_LESSONS.basics = {
     if (good) { beep('win'); confetti(30); }
   }
 
-  window.BQ_MINI = { start };
+  /* =====================================================================================================
+     DUPLICATE MiniBridge — everyone plays the same deals (kept on the server) and results are matchpointed.
+     The server address is the one line  window.BQ_SERVER = '…'  in index.html.  No hints in this mode.
+     ===================================================================================================== */
+  const SERVER = String(window.BQ_SERVER || '').replace(/\/+$/, '');
+  const USER_RE = /^[A-Za-z0-9]{1,20}$/;
+  const ls = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* private mode: just don't remember */ } },
+  };
+  async function api(path, body) {
+    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 15000);
+    let r;
+    try {
+      r = await fetch(SERVER + path, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: ctl.signal } : { signal: ctl.signal });
+    } catch (e) { const err = new Error('Can’t reach the duplicate server. Check your internet connection and try again.'); err.offline = true; throw err; }
+    finally { clearTimeout(timer); }
+    let data = null; try { data = await r.json(); } catch (e) { /* not JSON */ }
+    if (!r.ok) throw new Error((data && data.error) || `The duplicate server had a problem (${r.status}).`);
+    return data;
+  }
+  const dupUser = () => ls.get('bq.dupUser', '');
+  const ordinal = (n) => n + (n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10] || 'th');
+  const pctText = (p) => (p === null || p === undefined ? '—' : `${p}%`);
+  function resultWord(contract, tricks) {
+    const d = tricks - (+contract[0] + 6);
+    return d === 0 ? 'made' : d > 0 ? `made +${d}` : `down ${-d}`;
+  }
+  function dupHead(title) {
+    return `<div class="lesson-head"><button class="chip-btn" id="dup-back" title="Back">✕</button><div class="title">🏆 ${title}</div></div>`;
+  }
+  const dupError = (e) => `<div class="callout c-red">${esc(e.message || String(e))}</div>`;
+  const dupButtons = (skip) => `<div class="row dup-btns">
+      ${skip === 'next' ? '' : '<button class="btn green" id="dup-next">▶ Play a board</button>'}
+      ${skip === 'mine' ? '' : '<button class="btn ghost" id="dup-mine">📋 My results</button>'}
+      ${skip === 'leaders' ? '' : '<button class="btn ghost" id="dup-leaders">🏅 Leaderboard</button>'}
+    </div>`;
+  function wireDup(back) {
+    const on = (id, fn) => { const el = document.getElementById(id); if (el) el.onclick = fn; };
+    on('dup-back', back || dupHome); on('dup-next', dupNext); on('dup-mine', dupMine); on('dup-leaders', dupLeaders);
+  }
+  // results that could not be sent (no connection) wait on this device and are sent the next time
+  async function flushPending() {
+    const waiting = ls.get('bq.dupPending', []);
+    if (!waiting.length) return;
+    const still = [];
+    for (const w of waiting) { try { await api('/api/result', w); } catch (e) { if (e.offline) still.push(w); } }
+    ls.set('bq.dupPending', still);
+  }
+
+  function dupHome(note) {
+    Q.setBusy(false); G = null;
+    const p = player();
+    const guess = dupUser() || ((p && p.name) || '').replace(/[^A-Za-z0-9]/g, '').slice(0, 20);
+    Q.render(`<div class="wrap">${dupHead('Duplicate MiniBridge')}
+      <div class="panel">
+        <h2>Play the same deals as everyone else!</h2>
+        <p>Every player gets the <b>same cards</b>. You always declare with the best hand. When you finish a board, you see how your score compares with everyone who played it — and your score keeps updating as more people play.</p>
+        <div class="callout">🚫🦉 <b>No hints</b> here. (Hints are still in Free Play.)</div>
+        <p style="margin:12px 0 4px"><b>Your username</b> <span class="muted">— letters and numbers only</span></p>
+        <input type="text" id="dup-user" maxlength="20" value="${esc(guess)}" placeholder="Username" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false">
+        <div id="dup-msg">${note || ''}</div>
+        ${dupButtons()}
+        <div id="dup-sum" class="muted" style="margin-top:10px"></div>
+      </div></div>`);
+    wireDup(Q.showMap);
+    const inp = document.getElementById('dup-user');
+    inp.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); dupNext(); } };
+    flushPending().then(() => {
+      const u = dupUser(); if (!u || !document.getElementById('dup-sum')) return;
+      api('/api/player/' + encodeURIComponent(u)).then((d) => {
+        const el = document.getElementById('dup-sum'); if (!el || !d.summary.boards) return;
+        el.innerHTML = `${esc(d.user)}: <b>${d.summary.boards}</b> board${d.summary.boards > 1 ? 's' : ''} played${d.summary.pct === null ? '' : ` · matchpoints <b>${d.summary.pct}%</b>`}`;
+      }).catch(() => {});
+    });
+  }
+  // read the username box if it is on screen; otherwise use the remembered name
+  function needUser() {
+    const inp = document.getElementById('dup-user');
+    const u = inp ? inp.value.trim() : dupUser();
+    if (!USER_RE.test(u)) {
+      const msg = '<div class="callout c-red">Type a username first: 1 to 20 letters and numbers, no spaces.</div>';
+      if (inp) { document.getElementById('dup-msg').innerHTML = msg; inp.focus(); } else dupHome(msg);
+      return null;
+    }
+    ls.set('bq.dupUser', u);
+    return u;
+  }
+  async function dupNext() {
+    const user = needUser(); if (!user) return;
+    Q.render(`<div class="wrap">${dupHead('Duplicate MiniBridge')}<div class="panel"><p class="big">🃏 Dealing your next board…</p></div></div>`); wireDup();
+    try {
+      const d = await api('/api/next', { user });
+      const hands = {}; P.SEATS.forEach((s) => (hands[s] = P.sortHand(d.board.hands[s])));
+      const m = P.miniSetup(hands, 'S');
+      if (m.redeal || m.side !== 'NS') throw new Error('This board is not set up for MiniBridge. Please tell your teacher (board ' + d.board.number + ').');
+      G = { hands, m, side: 'NS', contract: null, st: null, hint: null, dup: { id: d.board.id, number: d.board.number, user, plays: d.board.plays } };
+      showAnnounce();
+    } catch (e) { dupHome(dupError(e)); }
+  }
+  async function dupFinish() {
+    const st = G.st, c = G.contract, dup = G.dup, tricks = st.tricks.NS;
+    G.done = true;
+    const sc = P.miniScore(c, tricks);
+    const payload = { user: dup.user, boardId: dup.id, contract: c.level + c.strain, tricks };
+    const headline = sc.made ? `🎉 You made ${contractText(c)}${sc.over ? ` with ${sc.over} overtrick${sc.over > 1 ? 's' : ''}` : ''}!` : `😬 Down ${sc.down} — you took ${tricks} of ${c.level + 6} tricks.`;
+    Q.render(`<div class="wrap">${dupHead('Board ' + dup.number)}<div class="panel results"><h2>${headline}</h2><p class="big">📨 Sending your result…</p></div></div>`); wireDup();
+    if (sc.made) { beep('win'); confetti(30); }
+    try {
+      const view = await api('/api/result', payload);
+      showBoard(view, { headline, saved: view.saved });
+    } catch (e) {
+      if (e.offline) ls.set('bq.dupPending', ls.get('bq.dupPending', []).concat([payload]));
+      Q.render(`<div class="wrap">${dupHead('Board ' + dup.number)}<div class="panel results"><h2>${headline}</h2>
+        ${dupError(e)}${e.offline ? '<p>Your result is <b>saved on this device</b> and will be sent the next time you open Duplicate.</p>' : ''}
+        ${dupButtons()}</div></div>`); wireDup();
+    }
+  }
+  function resultsTable(results) {
+    return `<div style="overflow-x:auto"><table class="scores dup-table"><tr><th>#</th><th style="text-align:left">Player</th><th>Contract</th><th>Tricks</th><th>Score</th><th>MP %</th></tr>
+      ${results.map((r) => `<tr class="${r.you ? 'me' : ''}"><td>${r.rank}</td><td style="text-align:left">${esc(r.user)}${r.you ? ' (you)' : ''}</td><td>${bidHTML(r.contract)}</td><td>${r.tricks}</td><td>${r.score}</td><td>${pctText(r.pct)}</td></tr>`).join('')}</table></div>`;
+  }
+  function showBoard(view, opts = {}) {
+    const y = view.you, b = view.board, n = view.results.length;
+    const handsStr = Object.fromEntries(P.SEATS.map((s) => [s, P.handString(P.sortHand(b.hands[s]))]));
+    Q.render(`<div class="wrap">${dupHead('Board ' + b.number)}
+      <div class="panel results">
+        <h2>${opts.headline || `Board ${b.number}: ${bidHTML(y.contract)} ${resultWord(y.contract, y.tricks)}`}</h2>
+        <div class="line">Your score: <b>${y.score}</b></div>
+        ${opts.saved === false ? '<div class="callout blue">You had already played this board, so your <b>first</b> result is the one that counts.</div>' : ''}
+        ${y.pct === null
+          ? '<div class="callout">You are the <b>first</b> to play this board! Come back later to see how you compare.</div>'
+          : `<div class="dup-big">${y.pct}%</div><div class="line"><b>${ordinal(y.rank)}</b> of ${n} players on this board</div>`}
+        ${resultsTable(view.results)}
+        ${view.summary && view.summary.pct !== null ? `<div class="line" style="margin-top:10px">Your running total: <b>${view.summary.pct}%</b> over ${view.summary.compared} board${view.summary.compared > 1 ? 's' : ''}</div>` : ''}
+        ${dupButtons()}
+        <div class="q-kicker" style="margin-top:14px">👀 All four hands</div>
+        <div style="display:flex;justify-content:center">${Q.dealHTML(handsStr, { you: 'S', contract: y.contract, declarer: 'S' })}</div>
+      </div></div>`);
+    wireDup(opts.back);
+  }
+  async function dupMine() {
+    const user = needUser(); if (!user) return;
+    Q.render(`<div class="wrap">${dupHead('My results')}<div class="panel"><p class="big">Loading…</p></div></div>`); wireDup();
+    try {
+      await flushPending();
+      const d = await api('/api/player/' + encodeURIComponent(user)), s = d.summary;
+      Q.render(`<div class="wrap">${dupHead('My results')}
+        <div class="panel">
+          <h2>📋 ${esc(d.user)}</h2>
+          ${!s.boards ? '<p>No boards played yet. Play one!</p>' : `
+          <div class="callout c-green">Boards played: <b>${s.boards}</b>${s.pct === null ? ' · no one else has played your boards yet' : ` · Matchpoints: <b>${s.mp}</b> of ${s.top} = <b>${s.pct}%</b>`}</div>
+          <p class="muted" style="margin:4px 0">Tap a board to see everyone’s results. Your percentages change as more people play.</p>
+          <div style="overflow-x:auto"><table class="scores dup-table dup-pick"><tr><th>Board</th><th>Contract</th><th>Result</th><th>Score</th><th>Players</th><th>MP %</th></tr>
+            ${d.boards.map((b) => `<tr data-id="${b.id}"><td><b>${b.number}</b></td><td>${bidHTML(b.contract)}</td><td>${resultWord(b.contract, b.tricks)}</td><td>${b.score}</td><td>${b.players}</td><td>${b.pct === null ? '—' : `${b.pct}% <span class="muted">(${ordinal(b.rank)})</span>`}</td></tr>`).join('')}</table></div>`}
+          ${dupButtons('mine')}
+        </div></div>`);
+      wireDup();
+      document.querySelectorAll('.dup-pick tr[data-id]').forEach((tr) => (tr.onclick = async () => {
+        try { showBoard(await api(`/api/board/${tr.dataset.id}?user=${encodeURIComponent(user)}`), { back: dupMine }); } catch (e) { dupHome(dupError(e)); }
+      }));
+    } catch (e) { dupHome(dupError(e)); }
+  }
+  async function dupLeaders() {
+    Q.render(`<div class="wrap">${dupHead('Leaderboard')}<div class="panel"><p class="big">Loading…</p></div></div>`); wireDup();
+    try {
+      const d = await api('/api/leaderboard'), me = dupUser().toLowerCase();
+      Q.render(`<div class="wrap">${dupHead('Leaderboard')}
+        <div class="panel">
+          <h2>🏅 Leaderboard</h2>
+          ${!d.players.length ? '<p>Nobody has played yet. Be the first!</p>' : `
+          <p class="muted" style="margin:4px 0">${d.boards} board${d.boards > 1 ? 's' : ''} in play. The percentage is matchpoints won out of matchpoints possible.</p>
+          <div style="overflow-x:auto"><table class="scores dup-table"><tr><th>#</th><th style="text-align:left">Player</th><th>Boards</th><th>MP %</th></tr>
+            ${d.players.map((p, i) => `<tr class="${p.user.toLowerCase() === me ? 'me' : ''}"><td>${p.pct === null ? '—' : i + 1}</td><td style="text-align:left">${esc(p.user)}${p.user.toLowerCase() === me ? ' (you)' : ''}</td><td>${p.boards}</td><td>${pctText(p.pct)}</td></tr>`).join('')}</table></div>`}
+          ${dupButtons('leaders')}
+        </div></div>`);
+      wireDup();
+    } catch (e) { dupHome(dupError(e)); }
+  }
+
+  window.BQ_MINI = { start, duplicate: dupHome, hasDuplicate: !!SERVER };
 })();
 
 </script>
