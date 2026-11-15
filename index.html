@@ -560,6 +560,8 @@ button, .card { touch-action: manipulation; -webkit-tap-highlight-color: transpa
   .challenge-banner .ic { font-size: 1.6rem; }
   .example-row { gap: 8px; }
   .example-row .ex { flex: 1 1 140px; }
+  .example-row .ex { padding: 8px 9px; }
+  .example-row .ex .hand-text { word-spacing: -.25em; font-size: .95rem; }
   .example-row.ns { grid-template-columns: minmax(200px, 1fr); }
   .example-row.seats { gap: 6px 8px; }
   .example-row.seats .ex { padding: 6px 9px; }
@@ -792,7 +794,7 @@ button, .card { touch-action: manipulation; -webkit-tap-highlight-color: transpa
 </head>
 <body>
   <div id="app"></div>
-  <div class="build-tag">Bridge Quest · version 2026-11-14 (9) · 21 lessons · duplicate</div>
+  <div class="build-tag">Bridge Quest · version 2026-11-14 (11) · 22 lessons · duplicate</div>
   <noscript>Bridge Quest needs JavaScript turned on.</noscript>
   <!-- Duplicate MiniBridge: the address of the results server.  Leave it empty ('') to hide the Duplicate tile. -->
   <script>window.BQ_SERVER = 'https://bridgequest-server-production.up.railway.app';</script>
@@ -1007,13 +1009,47 @@ button, .card { touch-action: manipulation; -webkit-tap-highlight-color: transpa
     if (oppSuits.length === 1) return L[oppSuits[0]] <= 2 && unbid.every((s) => L[s] >= 3);
     return unbid.every((s) => L[s] >= 4);
   }
-  // Overcall or double?  1NT overcall → takeout double → suit overcall → pass
+  /* Overcall or double?  (Andre's priorities, Nov 2026)
+     1NT overcall (15-18 balanced with a stopper) comes first.
+     Too strong to overcall: 18+ HCP with a suit, or 19+ balanced → double first (and bid again next time).
+     A hand that fits BOTH a suit overcall and a takeout double:
+       5-card MAJOR → overcall.  With 4 cards in the other major as well: still overcall, unless the 5-card suit
+                      is weak (no ace or king) — then double.
+       5-card MINOR → double with a 4-card unbid major (majors matter more); overcall with only 3-3 in the others.
+     Both majors (4-4) and 14+ HCP over a minor opening: double even with just 2 cards in the other minor. */
   function competeBid(hand, opening, oppSuits, lastBid) {
-    const opps = oppSuits || [opening[1]], p = hcp(hand), L = lens(hand);
+    const opps = oppSuits || [opening[1]], p = hcp(hand), L = lens(hand), h = H(hand);
     if (opps.length === 1 && p >= 15 && p <= 18 && isBalanced(hand) && hasStopper(hand, opps[0])) return '1N';
-    // a good 5-card major overcall comes before a double when you are not short enough to double
-    if (takeoutDoubleOK(hand, opps)) return 'X';
-    return overcallBid(hand, opening, opps, lastBid);
+    const over = overcallBid(hand, opening, opps, lastBid);
+    const suit = over !== 'P' && over !== '1N' ? over[1] : null;
+    if ((suit && p >= 18) || (p >= 19 && isBalanced(hand))) return 'X';
+    let canX = takeoutDoubleOK(hand, opps);
+    if (!canX && opps.length === 1 && 'CD'.includes(opps[0]) && L.S >= 4 && L.H >= 4 && p >= 14 && L[opps[0]] <= 3) canX = true;
+    if (canX && suit) {
+      if ('HS'.includes(suit)) {
+        const other = suit === 'S' ? 'H' : 'S';
+        return !opps.includes(other) && L[other] >= 4 && !/[AK]/.test(h[suit]) ? 'X' : over;
+      }
+      return ['S', 'H'].some((m) => !opps.includes(m) && L[m] >= 4) ? 'X' : over;
+    }
+    return canX ? 'X' : over;
+  }
+  /* ---------- Preempts, weak twos and the strong 2♣ ---------- */
+  // good suit = 2 of the top 3 honors (A K Q), or 3 of the top 5 (A K Q J 10)
+  const goodSuit = (cards) => cards.split('').filter((c) => 'AKQ'.includes(c)).length >= 2 || cards.split('').filter((c) => 'AKQJT'.includes(c)).length >= 3;
+  // 22+ HCP → 2♣ (strong, artificial, forcing).  12-21 → the normal opening ladder.
+  // 5-10 HCP with a good long suit: 7 cards → open 3 of it (8+ → 4); 6 cards → a weak two (2♦ 2♥ 2♠ — never 2♣).
+  // 11 HCP is deliberately in neither range: it is a judgment call on the whole hand (aces/kings, tens, honors in the
+  // long suit, vulnerability).  Modern style opens a good six-card suit at the 1-level, so that is what this returns.
+  function preemptOpen(hand) {
+    const p = hcp(hand), L = lens(hand), h = H(hand);
+    if (p >= 12) return openingBid(hand) || '2C';
+    if (p === 11) { const s = SUITS.find((x) => L[x] >= 6 && goodSuit(h[x])); return s ? '1' + s : 'P'; }
+    if (p < 5) return 'P';
+    const long = SUITS.find((x) => L[x] >= 7 && goodSuit(h[x]));
+    if (long) return (L[long] >= 8 ? '4' : '3') + long;
+    const six = SUITS.find((x) => L[x] === 6 && x !== 'C' && goodSuit(h[x]));
+    return six ? '2' + six : 'P';
   }
   // Advancer after partner's takeout double.  free = RHO bid (so advancer is not forced).
   // NOTRUMP needs points: a stopper in each of their suits, no 4-card unbid major, no singleton or void:
@@ -1088,7 +1124,7 @@ button, .card { touch-action: manipulation; -webkit-tap-highlight-color: transpa
     bidText, bidRank, openingBid, respondToMinor, respondToMajor,
     respondTo1NT, staymanAnswer, afterStayman, openerAfterStayman, transferAccept, afterTransfer, openerAfterTransfer,
     hasStopper, overcallBid, advanceOvercall, honorsIn, overcallerRebid, cheapest,
-    takeoutDoubleOK, competeBid, advanceDouble, advancerCuebid };
+    takeoutDoubleOK, competeBid, preemptOpen, goodSuit, advanceDouble, advancerCuebid };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Bridge = api;
 })(this);
@@ -1700,12 +1736,28 @@ window.BQ_LADDERS = {
   },
   ocvx: {
     name: 'Overcall or Double? Guide',
-    html: `<div class="callout c-black"><b>1. A good 5-card suit?</b> → <b>OVERCALL</b> it.<br>10-5-2: 10+ HCP · 5+ cards · 2 good honors (a 6-card suit can have just one)</div>
-      <div class="callout blue"><b>2. Short in THEIR suit, with the other suits?</b> → <b>DOUBLE (X)</b>. Needs 11+ HCP.<br>
+    html: `<div class="callout c-black"><b>A good 5-card suit?</b> → <b>OVERCALL</b> it.<br>10-5-2: 10+ HCP · 5+ cards · 2 good honors (a 6-card suit can have just one)</div>
+      <div class="callout blue"><b>Short in THEIR suit, with the other suits?</b> → <b>DOUBLE (X)</b>. Needs 11+ HCP.<br>
         They bid ONE suit → 0, 1 or 2 cards in it, and 3+ in each of the other three<br>
         They bid TWO suits → 4+ cards in each of the two unbid suits</div>
-      <div class="callout c-green"><b>3. Balanced, 15–18 HCP, with a stopper in their suit?</b> → overcall <b>1NT</b>.</div>
-      <div class="callout c-red"><b>4. None of these?</b> → <b>PASS</b> — even with 13 or 14 HCP. Pass is a bid too!</div>`,
+      <div class="callout c-teal"><b>BOTH fit? Majors matter most!</b><br>
+        5-card <b>major</b> → <b>overcall</b> it (even with 4 in the other major, unless your 5-card suit has no ace or king)<br>
+        5-card <b>minor</b> with a 4-card major → <b>double</b> · with only 3-3 in the majors → <b>overcall</b> the minor<br>
+        Both majors (4-4) and 14+ HCP → you may <b>double</b> even with only 2 cards in the other minor</div>
+      <div class="callout c-green"><b>Balanced, 15–18 HCP, with a stopper in their suit?</b> → overcall <b>1NT</b>.</div>
+      <div class="callout c-red"><b>None of these?</b> → <b>PASS</b> — even with 13 or 14 HCP. Pass is a bid too!</div>
+      <p class="muted" style="font-size:.95rem">Giant hands: an overcall shows about 10–17 HCP. With 18+ you are too strong — <b>double first</b>, then bid your suit on the next round.</p>`,
+  },
+  preempts: {
+    name: 'Preempt Guide',
+    html: `<div class="callout c-black"><b>WEAK TWO</b> — open <b>2♦, 2♥ or 2♠</b>:<br>a good <b>6-card</b> suit · <b>5–10 HCP</b></div>
+      <div class="callout blue"><b>3-LEVEL PREEMPT</b> — open <b>3♣, 3♦, 3♥ or 3♠</b>:<br>a good <b>7-card</b> suit · <b>5–10 HCP</b></div>
+      <div class="callout c-teal"><b>Good suit</b> = 2 of the top 3 honors (A K Q), or 3 of the top 5 (A K Q J 10).</div>
+      <div class="callout c-red"><b>2♣ is NOT a weak two!</b> It shows a <b>giant</b> hand: <b>22+ HCP</b>. It says nothing about clubs, and partner <b>must</b> bid (usually 2♦, “waiting”).</div>
+      <div class="callout"><b>12–21 HCP?</b> You are too strong to preempt — open at the <b>1-level</b> (or 1NT / 2NT) as usual.</div>
+      <div class="callout c-green"><b>11 HCP and a six-card suit?</b> Look at the whole hand. Aces, kings, tens and honors in your long suit make it better — usually open at the <b>1-level</b>.<br>
+        <b>Vulnerable?</b> Make your weak twos and preempts a little stronger.</div>
+      <div class="callout c-green"><b>Partner preempted?</b> Usually <b>pass</b>. With 3+ cards in partner’s suit you can <b>raise</b> — more trumps, more trouble for the opponents.</div>`,
   },
   leads: {
     name: 'Opening Lead Guide',
@@ -3949,9 +4001,10 @@ BQ_LESSONS.basics = {
 
 </script>
   <script>
-/* JumpStart 2 · Overcall or Double? (Class 12).  19 graded + challenge.
+/* JumpStart 2 · Overcall or Double? (Class 12).  20 graded + challenge.
    The six practice hands from the JumpStart 2 manual, pages 28-29, plus more hands that follow the same rules.
-   Hands that fit BOTH an overcall and a takeout double are left out on purpose (see README) — every hand here fits only one. */
+   The "When BOTH fit" section teaches Andre's priorities (Nov 2026): 5-card major → overcall; 5-card minor with a
+   4-card major → double; 5-card minor with 3-3 majors → overcall; 4-4 majors and 14+ → double is fine. */
 (function () {
   const R = 'ocvx';
   const O1 = (o) => [{ who: 'Opponent', b: o }, { who: 'You', b: '?' }];
@@ -3973,16 +4026,10 @@ BQ_LESSONS.basics = {
       {
         t: 'mc', kicker: 'Which is which?', q: 'Which bid promises a suit of 5 or more cards?', ladder: R,
         choices: ['An overcall', 'A takeout double', 'Both of them'], a: 0, layout: 'wide',
-        why: 'An overcall shows YOUR suit: 5+ cards with 2 good honors. A takeout double shows the opposite — no long suit, but support for whatever partner picks.',
-      },
-      {
-        t: 'mc', kicker: 'Which is which?', q: 'Which bid says “Partner, I am short in their suit — you choose one of the others”?', ladder: R,
-        choices: ['A takeout double (X)', 'An overcall', 'Pass'], a: 0, layout: 'wide',
-        why: 'The takeout double asks partner to pick. In the bidding box it is the red card marked X.',
+        why: 'An overcall shows YOUR suit: 5+ cards with 2 good honors. A takeout double (the red X card) says the opposite: “I am short in their suit — partner, you pick.”',
       },
       bid('They opened 1♣', 'K765.KQ73.A943.2', O1('1C'), 'X', '12 HCP, a singleton club, and 4 cards in every other suit. No 5-card suit to overcall — a perfect takeout double.', { whyWrong: { '1H': 'An overcall shows 5+ cards. You have only four hearts.', '1S': 'An overcall shows 5+ cards. You have only four spades.' } }),
       bid('They opened 1♣', 'Q765.AK732.A3.54', O1('1C'), '1H', '13 HCP and five hearts headed by the A-K: 10-5-2, overcall 1♥. (Not a double — you have only two diamonds.)', { whyWrong: { X: 'A double promises 3+ cards in EVERY unbid suit. You have only two diamonds — partner might pick them!' } }),
-      bid('They opened 1♦', '83.AQJ96.K4.T752', O1('1D'), '1H', '10 HCP, five hearts with three good honors: 10-5-2 → overcall 1♥.', { whyWrong: { P: '10 HCP is enough to overcall at the 1-level with such a good suit.', X: 'A double needs 11+ HCP and support for all the other suits. You have only two spades.' } }),
       bid('They opened 1♥', 'A975.4.KQ83.QJ62', O1('1H'), 'X', '12 HCP, a singleton heart, and four cards in each of the other suits → takeout double.', { whyWrong: { '1S': 'An overcall shows 5+ cards. You have only four spades — let partner choose.' } }),
       bid('They opened 1♥', 'K4.Q8.AJ752.K943', O1('1H'), '2D', '13 HCP and five diamonds with the A-J. You have to go to the 2-level, but 13 HCP is plenty: 2♦.', { whyWrong: { X: 'A double promises 3+ spades — partner will often bid them, and you have only two.' } }),
       {
@@ -3997,12 +4044,25 @@ BQ_LESSONS.basics = {
         choices: ['No — if my hand fits neither an overcall nor a double, I pass', 'Yes — with 14 HCP you must always bid', 'Yes — always double with 14'], a: 0,
         why: 'Points alone are not enough. You need the right SHAPE: a good 5-card suit to overcall, or shortness in their suit to double.',
       },
-      bid('They opened 1♣', 'AQ5.K83.Q742.J63', O1('1C'), 'P', '12 HCP, but no 5-card suit, and three clubs is too many to double. Pass.', { whyWrong: { X: 'You are not short in clubs, so it is not a takeout double.', '1D': 'An overcall shows 5+ cards. You have four diamonds.' } }),
       bid('They opened 1♦', 'KJ53.A4.QJ82.K73', O1('1D'), 'P', '14 HCP — but four cards in THEIR suit, and no 5-card suit of your own. Pass, and enjoy defending!', { whyWrong: { X: 'With four diamonds you are not short in their suit. And partner would pick hearts — you have only two!', '1S': 'An overcall shows 5+ cards. You have four spades.' } }),
       bid('They opened 1♠', 'K75.KQ732.A943.2', O1('1S'), '2H', '12 HCP and five hearts headed by the K-Q → overcall 2♥. (Not a double: you have three spades.)', { whyWrong: { X: 'With three spades you are not short in their suit. Show your hearts instead.' } }),
       bid('They opened 1♠', 'T8.KJ4.AQ73.K952', O1('1S'), 'X', '13 HCP, only two spades, and 3+ cards in hearts, diamonds and clubs. No 5-card suit → takeout double.', { whyWrong: { '2D': 'An overcall shows 5+ cards. You have four diamonds.', '2C': 'An overcall shows 5+ cards. You have four clubs.' } }),
-      bid('They opened 1♠', 'Q4.KJT985.A3.862', O1('1S'), '2H', '10 HCP and SIX hearts with three good honors → overcall 2♥.', { whyWrong: { P: 'A six-card suit this good is worth showing.', X: 'A double needs 11+ HCP and support for the other suits. You have a one-suited hand.' } }),
       bid('They opened 1♠', 'Q73.AKQ3.J653.42', O1('1S'), 'P', '12 HCP, but no 5-card suit (hearts is only four), three spades is too many to double — and you have only two clubs. Pass.', { whyWrong: { '2H': 'An overcall shows 5+ cards. A-K-Q-3 is pretty, but it is only four!', X: 'A double promises 3+ clubs and shortness in spades. You have neither.' } }),
+      {
+        t: 'teach', title: 'When BOTH fit: which one?',
+        owl: 'Some hands fit an overcall AND a double. Now you have to choose — and the secret is: MAJORS matter most!',
+        html: `<div class="callout c-black"><b>5-card MAJOR</b> → <b>overcall</b> it. Partner needs to hear about a five-card major!<br>
+            <span class="muted" style="font-size:.95rem">(Even with four cards in the other major — unless your 5-card suit is weak, with no ace or king.)</span></div>
+          <div class="callout blue"><b>5-card MINOR with a 4-card major</b> → <b>double</b>. You might find a major-suit fit.</div>
+          <div class="callout c-teal"><b>5-card MINOR with only 3-3 in the majors</b> → <b>overcall</b> your minor.</div>
+          <div class="callout c-green"><b>Both majors (4-4) and a strong hand (14+ HCP)</b> → you may <b>double</b>, even with only two cards in the other minor.</div>`,
+      },
+      bid('Both fit!', 'KQ765.K73.A94.32', O1('1C'), '1S', 'This hand fits a double (short clubs, 3+ everywhere else) AND an overcall. With a five-card MAJOR, overcall: 1♠.', { q: 'They opened 1♣. Overcall or double?', whyWrong: { X: 'The shape is right for a double — but then partner never finds out you have FIVE spades. Show the major.' } }),
+      bid('Both fit!', 'KJ73.A84.AQ965.2', O1('1C'), 'X', 'Five diamonds — but also FOUR spades. Majors matter most: double, and you may find a spade fit. (If you overcall 1♦, the spades can get lost.)', { q: 'They opened 1♣. Overcall or double?', whyWrong: { '1D': 'Your diamonds are nice, but a major-suit fit scores better. With a 4-card major on the side, double.' } }),
+      bid('Both fit!', 'K73.A84.AQ965.32', O1('1C'), '1D', 'Five good diamonds, and only three cards in each major. No 4-card major to find — so overcall your suit: 1♦.', { q: 'They opened 1♣. Overcall or double?', whyWrong: { X: 'With only 3-3 in the majors there is no strong reason to double. Show your five-card suit.' } }),
+      bid('Both fit!', 'AQJ75.K943.3.Q82', O1('1D'), '1S', 'Five spades AND four hearts. Still overcall the five-card major — these spades (A-Q-J) are too good to hide: 1♠.', { q: 'They opened 1♦. Overcall or double?', ok: ['X'], whyWrong: { '1H': 'You have FIVE spades and four hearts. Overcall the longer major.' } }),
+      bid('Both fit!', 'QJ753.AK94.3.K82', O1('1D'), 'X', 'Five spades and four hearts again — but this time the spades are WEAK (no ace or king) and the hearts are strong. Double, and let partner pick the major.', { q: 'They opened 1♦. Overcall or double?', ok: ['1S'], whyWrong: { '1H': 'An overcall shows 5+ cards. You have only four hearts.' } }),
+      bid('Both majors', 'AQ75.KQ73.K3.962', O1('1C'), 'X', '14 HCP and four cards in BOTH majors. You have only two diamonds — but with both majors and a strong hand, double anyway. Partner will usually pick a major.', { q: 'They opened 1♣. What do you bid?', ok: ['P'], whyWrong: { '1S': 'An overcall shows 5+ cards. You have four spades — and four hearts too. Double shows both.', '1H': 'An overcall shows 5+ cards. You have four hearts — and four spades too. Double shows both.' } }),
       {
         t: 'teach', title: 'When they have bid TWO suits',
         html: `<p>The opponents open, partner passes, and the next opponent bids a <b>new</b> suit. Now only <b>two</b> suits are left.</p>
@@ -4014,11 +4074,119 @@ BQ_LESSONS.basics = {
       bid('They bid clubs and spades', '75.A873.AQ653.42', O2('1C', '1S'), '2D', '10 HCP and five diamonds with the A-Q → overcall 2♦. (Not a double: that needs 11+ HCP.)', { whyWrong: { X: 'Close — you do have both unbid suits. But a double needs 11+ HCP, and you have 10. Show your five-card suit instead.' } }),
       bid('They bid clubs and hearts', 'AK84.7.KQ93.J852', O2('1C', '1H'), 'X', 'The unbid suits are spades and diamonds: four of each, and 13 HCP → double.', { whyWrong: { '1S': 'An overcall shows 5+ cards. You have four spades — and four diamonds too. Double shows both.' } }),
       bid('They bid clubs and hearts', 'AKJ84.7.Q93.J852', O2('1C', '1H'), '1S', 'Five spades with A-K-J and 11 HCP → overcall 1♠. (Not a double: you have only three diamonds.)', { whyWrong: { X: 'A double here promises 4+ cards in BOTH unbid suits. You have only three diamonds.' } }),
-      bid('They bid clubs and spades', 'KJ7.A84.Q852.K63', O2('1C', '1S'), 'P', '13 HCP, but only three hearts (a double needs four of each) and no 5-card suit. Pass.', { whyWrong: { X: 'A double here promises 4+ hearts AND 4+ diamonds. You have only three hearts.', '2D': 'An overcall shows 5+ cards. You have four diamonds.' } }),
       bid('', 'AJ4.KQ5.K973.Q82', O1('1H'), '1N',
         '15 HCP and a balanced hand with hearts well stopped (K-Q-5). No 5-card suit, and three hearts is too many to double — but there is a THIRD way in: the <b>1NT overcall</b>! It shows 15–18 HCP, a balanced hand and a stopper in their suit, just like opening 1NT.',
         { q: 'They opened 1♥. What do you bid?', challenge: true, kicker: '', challengeNote: 'No 5-card suit, and not short in hearts… so is it a pass? Count your points and look at your shape again.',
           whyWrong: { P: 'With 15 HCP there is something better than pass. Remember the Overcalls lesson?', X: 'You have three hearts — not short in their suit.', '2D': 'An overcall in a suit shows 5+ cards. You have four diamonds.' } }),
+    ],
+  };
+})();
+
+</script>
+  <script>
+/* Preempts, Weak Twos & the Strong 2♣.  20 graded + challenge.
+   An original lesson (the JumpStart 2 manual stops before preempts), using the usual beginner rules:
+   weak two = good 6-card suit, 5-10 HCP (2♦ 2♥ 2♠ only) · 3-level preempt = good 7-card suit, 5-10 HCP ·
+   2♣ = 22+ HCP, artificial and forcing · 12-21 HCP opens normally.
+   11 HCP is left out of both ranges on purpose (Andre): judge the whole hand — usually open a six-card suit at the 1-level. */
+(function () {
+  const R = 'preempts', D = 'You are the dealer';
+  const ex = (title, lines) => `<div class="ex"><div class="ex-t">${title}</div><div class="hand-text">${lines}</div></div>`;
+  const open = (hand, a, why, extra) => Object.assign({ t: 'bid', kicker: D, q: 'What do you open?', hand, a, check: 'preempt', why, ladder: R, levels: 3 }, extra);
+
+  BQ_LESSONS.preempts = {
+    id: 'preempts', icon: '🚧', title: 'Preempts, Weak Twos & the Strong 2♣',
+    steps: [
+      {
+        t: 'teach', title: 'Why bid with a WEAK hand?',
+        owl: 'Usually you need 12 points to open. But a weak hand with a LONG suit has a superpower: it can get in the opponents’ way!',
+        html: `<p>A <b>preempt</b> is a jump opening bid with a <b>weak</b> hand and a <b>long</b> suit. It works because:</p>
+          <ul><li>It <b>steals bidding room</b>. The opponents have the points, but now they must start way up at the 2- or 3-level!</li>
+            <li>It tells partner your <b>whole hand in one bid</b>.</li>
+            <li>It is <b>safe</b>: with your suit as trumps, all those long cards take tricks.</li></ul>
+          <div class="callout c-black"><b>WEAK TWO</b> — open <b>2♦, 2♥ or 2♠</b>: a good <b>6-card</b> suit and <b>5–10 HCP</b></div>
+          <div class="callout blue"><b>3-LEVEL PREEMPT</b> — open <b>3♣, 3♦, 3♥ or 3♠</b>: a good <b>7-card</b> suit and <b>5–10 HCP</b></div>
+          <div class="callout c-teal"><b>Good suit</b> = 2 of the top 3 honors (A K Q), or 3 of the top 5 (A K Q J 10).</div>`,
+      },
+      {
+        t: 'mc', kicker: 'Weak twos', q: 'Partner opens 2♠ — a weak two. What does partner have?', ladder: R, layout: 'wide',
+        choices: ['A good 6-card spade suit and 5–10 HCP', 'A 5-card spade suit and 12+ HCP', 'A giant hand with 22+ HCP'], a: 0,
+        why: 'A weak two shows exactly this: six good cards in the suit, and less than an opening hand (5–10 HCP).',
+      },
+      {
+        t: 'mc', kicker: 'Why preempt?', q: 'Why would you open the bidding with only 7 HCP?', ladder: R, layout: 'wide',
+        choices: ['To take bidding room away from the opponents', 'Because I expect to make game', 'To show partner I have 12+ points'], a: 0,
+        why: 'When you are weak, the opponents probably have the good cards. Your jump makes them guess at a high level — and they often guess wrong!',
+      },
+      open('KQJ865.73.942.83', '2S', '6 HCP and six spades with K-Q-J: a perfect weak two. Open 2♠.', { whyWrong: { P: 'With a good six-card suit and 5–10 HCP, get in their way!', '1S': '1♠ promises 12+ HCP. You have 6 — jump to 2♠ to show a WEAK hand.' } }),
+      open('84.AQT973.K5.762', '2H', '9 HCP and six hearts with A-Q-10: open 2♥.', { whyWrong: { P: 'A good six-card suit and 9 HCP is just right for a weak two.', '1H': '1♥ promises 12+ HCP. You have 9.' } }),
+      open('5.KQJ9742.T83.62', '3H', '6 HCP and SEVEN hearts. One more card means one level higher: open 3♥.', { whyWrong: { '2H': 'A weak two shows SIX cards. With seven, jump all the way to the 3-level.', P: 'Seven hearts headed by K-Q-J will take lots of tricks. Preempt!' } }),
+      open('AQJ865.K3.A42.83', '1S', '14 HCP — too strong to preempt! With 12 or more, open at the 1-level as usual: 1♠.', { whyWrong: { '2S': '2♠ would tell partner you have a WEAK hand (5–10). With 14 HCP you might miss a game!' } }),
+      open('KQJ86.73.942.853', 'P', 'A nice suit, but only FIVE cards, and only 6 HCP. Not a weak two (that needs six) and not an opening bid. Pass.', { whyWrong: { '2S': 'A weak two promises SIX cards. Count again — you have five.', '1S': '1♠ promises 12+ HCP. You have 6.' } }),
+      open('J87542.K3.Q42.83', 'P', 'Six spades — but look how weak they are: only the jack! A weak two needs a GOOD suit. Pass.', { whyWrong: { '2S': 'J-8-7-5-4-2 is not a good suit: no A, K or Q. If partner leads spades or the opponents double, you could be in big trouble.' } }),
+      open('73.85.KQJ942.J83', '2D', '7 HCP and six diamonds with K-Q-J: open 2♦. (2♦, 2♥ and 2♠ are all weak twos.)', { whyWrong: { P: 'A good six-card suit and 7 HCP: open a weak two.', '1D': '1♦ promises 12+ HCP. You have 7.' } }),
+      open('84.6.Q93.AQJ8752', '3C', '9 HCP and seven clubs with A-Q-J: open 3♣.', { whyWrong: { '2C': 'Careful! 2♣ is a very special bid — you will learn it next. With seven clubs, open 3♣.', '1C': '1♣ promises 12+ HCP. You have 9.' } }),
+      open('AQJ973.84.K52.63', '2S', '10 HCP — the very top of a weak two — and six good spades. Open 2♠.', { whyWrong: { '1S': '1♠ shows an opening hand. With 10 HCP and a good six-card suit, 2♠ describes this hand perfectly.', P: 'This is a maximum weak two. Don’t pass!' } }),
+      {
+        t: 'teach', title: 'The in-between hand: 11 HCP',
+        owl: 'A weak two is 5–10. An opening bid is 12+. So what about 11? There is no rule — you have to LOOK at the hand!',
+        html: `<p>With <b>11 HCP</b> and a six-card suit, ask: <b>how good is this hand, really?</b></p>
+          <ul><li><b>Aces and kings</b> are worth a little MORE than their points.</li>
+            <li><b>Queens and jacks</b> are worth a little less.</li>
+            <li><b>Tens</b> help too.</li>
+            <li>Honors <b>together in your long suit</b> are better than honors scattered in your short suits.</li></ul>
+          <div class="callout c-green">Most of the time, open these hands at the <b>1-level</b> — especially with aces and kings.</div>
+          <div class="callout blue"><b>Vulnerable?</b> Going down costs more, so be a little more careful: make your weak twos and preempts a bit <b>stronger</b>.</div>`,
+      },
+      open('AK9865.A3.942.83', '1S', 'Only 11 HCP — but look at the quality: two aces and a king, and the honors are in your six-card suit. This hand is worth an opening bid: 1♠.', { ok: ['2S'], whyWrong: { P: 'Two aces, a king and a six-card suit is far too good to pass!' } }),
+      {
+        t: 'mc', kicker: 'Which hand is better?', q: 'Both hands have 11 HCP and six spades. Which one is the BETTER hand?', ladder: R, layout: 'wide',
+        diagram: `<div class="example-row">${ex('Hand A', '♠ A K 10 8 6 5<br>♥ A 3<br>♦ 9 4 2<br>♣ 8 3')}${ex('Hand B', '♠ Q 8 7 5 4 2<br>♥ Q J<br>♦ K 3<br>♣ Q J 3')}</div>`,
+        choices: ['Hand A — aces and a king, with the honors in the long suit', 'Hand B — it has more honor cards', 'They are the same: 11 is 11'], a: 0,
+        why: 'Hand A has aces and a king (worth extra), a ten, and its honors sit in the long suit where they help it run. Hand B is all queens and jacks, scattered in short suits. Same points — very different hands!',
+      },
+      {
+        t: 'teach', title: 'The giant: the strong 2♣',
+        owl: 'Whooo! 2♣ is NOT a weak two. It is the biggest opening bid there is!',
+        html: `<p>What do you open with a <b>huge</b> hand? If you open 1♠ and partner passes with 4 points, you could miss a game!</p>
+          <div class="callout c-red"><b>2♣ = “I have a GIANT hand: 22+ HCP.”</b><br>It says <b>nothing about clubs</b>. It is a secret-code bid, like Stayman.</div>
+          <div class="callout blue">2♣ is <b>forcing</b>: partner <b>must</b> bid, even with 0 HCP. Partner usually answers <b>2♦</b> (“I’m waiting — tell me more”). Then the giant shows their real suit.</div>
+          <p>That is why there is <b>no weak two in clubs</b> — the 2♣ card already has a job!</p>`,
+      },
+      {
+        t: 'mc', kicker: 'Partner opened 2♣', q: 'Partner opens 2♣ and you have 0 HCP. Can you pass?', ladder: R, layout: 'wide',
+        choices: ['No! 2♣ is forcing — I bid 2♦ and wait', 'Yes — with 0 HCP I always pass', 'Yes — partner wants to play in clubs'], a: 0,
+        why: '2♣ says nothing about clubs, and partner has 22+ HCP. If you pass, you play in 2♣ with a giant hand going to waste. Bid 2♦ (“waiting”) and let partner describe the hand.',
+      },
+      open('AKQJ5.AK3.A4.K83', '2C', '24 HCP — a giant! Open 2♣. Next turn you will show your spades.', { whyWrong: { '1S': 'If partner has 4 HCP and passes 1♠, you miss a game. With 22+, open 2♣ — partner is not allowed to pass.', '2S': '2♠ is a WEAK two (5–10 HCP). You have 24!' } }),
+      open('AK.AKJ873.AQ4.K3', '2C', '24 HCP → open 2♣, the giant bid. You will bid your hearts next.', { whyWrong: { '1H': 'With 22+ HCP, 1♥ is too risky — partner might pass. Open 2♣.', '2H': '2♥ is a WEAK two (5–10 HCP). You have 24!' } }),
+      open('AQ5.KJ3.AQ42.KJ3', '2N', '20 HCP and balanced. That is not quite a giant (22+) — it is the 2NT opening you already know: 20–21 balanced.', { whyWrong: { '2C': '2♣ needs 22+ HCP. With 20–21 balanced, open 2NT.', '1D': 'With 20–21 HCP and a balanced hand, open 2NT.' } }),
+      {
+        t: 'teach', title: 'When partner preempts',
+        html: `<p>Partner opens a weak two or a 3-level preempt. You already know partner’s hand: a <b>long suit</b> and <b>not many points</b>.</p>
+          <div class="callout c-black">Most of the time: <b>Pass.</b> Partner has told the whole story.</div>
+          <div class="callout c-green">With <b>3 or more</b> cards in partner’s suit, you can <b>raise</b> — even with a weak hand. More trumps, more trouble for the opponents!</div>
+          <div class="callout c-red"><b>Don’t “rescue” partner</b> by bidding your own suit just because you are short in theirs. Partner’s suit is long and strong; yours probably isn’t.</div>`,
+      },
+      {
+        t: 'mc', kicker: 'Partner opened 2♥', q: 'Partner opens 2♥ (weak). You have 8 HCP and only ONE heart. What do you do?', ladder: R, layout: 'wide',
+        choices: ['Pass — partner has six good hearts', 'Bid my own 5-card suit to rescue partner', 'Bid 3NT'], a: 0,
+        why: 'Partner’s hearts are long and strong enough to be trumps even opposite a singleton. With 8 HCP there is no game. Pass!',
+      },
+      {
+        t: 'mc', kicker: 'Partner opened 2♠', q: 'Partner opens 2♠ (weak). You have 6 HCP and FOUR spades. What is a good idea?', ladder: R, layout: 'wide',
+        choices: ['Raise spades — ten trumps make it even harder for the opponents', 'Pass — we are both weak', 'Bid notrump'], a: 0,
+        why: 'You and partner have TEN spades. The opponents have most of the points and probably a game of their own — so raise, and take away even more of their bidding room!',
+      },
+      {
+        t: 'mc', kicker: 'They preempted!', q: 'An opponent opens 3♦. What do you know about that hand?', ladder: R, layout: 'wide',
+        choices: ['About seven diamonds and a weak hand', '12+ HCP and five diamonds', 'A giant hand with 22+ HCP'], a: 0,
+        why: 'A 3-level opening is a preempt: a long suit (about seven cards) and 5–10 HCP. Preempts work both ways — now YOU have to guess at a high level!',
+      },
+      open('73.85.942.KQJ983', 'P',
+        '6 HCP and six good clubs — it LOOKS like a weak two. But <b>2♣ is the giant bid</b> (22+ HCP), so there is no weak two in clubs! And 3♣ shows seven cards. With six clubs and a weak hand: <b>Pass</b>.',
+        { q: 'You are the dealer. What do you open?', challenge: true, kicker: '', challengeNote: 'Six good clubs and 6 HCP. A weak two? Think carefully about what each club bid means!', ok: ['3C'],
+          whyWrong: { '2C': 'Oh no — 2♣ tells partner you have 22+ HCP! Partner will bid and bid, and you have 6.', '1C': '1♣ promises 12+ HCP. You have 6.' } }),
     ],
   };
 })();
