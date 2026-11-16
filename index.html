@@ -444,6 +444,44 @@ button.card.playable:hover { z-index: 3; }
 .bidbox .dbl:not(:disabled):hover { background: #e25b5b; }
 .bidbox .dbl.pick-bad, .bidbox .dbl.pick-good, .bidbox .dbl.show-good { color: var(--ink); }
 
+/* ---------- count board (Card Play 6): the table after each card, plus the detective notebook ---------- */
+.cb { display: grid; grid-template-columns: 1fr auto 1fr; gap: 6px 8px; align-items: center; max-width: 540px; margin: 2px 0 8px; }
+.cb-hand { grid-column: 1 / -1; justify-self: center; background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 4px 12px 5px; }
+.cb-hand.you { border-color: var(--gold); background: #fff7e0; }
+.cb-t { font-size: .7rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .3px; }
+.cb-t span { font-weight: 600; text-transform: none; }
+.cb-cards, .cb-ln { font-family: Consolas, "Courier New", monospace; font-weight: 700; font-size: 1.02rem; line-height: 1.3; }
+.cb-su { display: inline-block; white-space: nowrap; margin-right: 14px; }
+.cb-su:last-child { margin-right: 0; }
+.cb-opp { background: #f6f7f3; border: 2px dashed #cfd5c6; border-radius: 12px; padding: 4px 9px 5px; min-width: 96px; align-self: stretch; }
+.cb-W { justify-self: end; } .cb-E { justify-self: start; }
+.cb-ln i { color: #b9bfb3; font-style: normal; }
+.cb-ln.out { background: #fde8e8; border-radius: 6px; margin: 0 -4px; padding: 0 4px; }
+.cb-out { display: inline-block; background: #d64545; color: #fff; border-radius: 6px; padding: 0 5px; font: 800 .62rem/1.5 system-ui, sans-serif; vertical-align: 2px; letter-spacing: .4px; }
+.cb-trick { background: var(--felt); color: #fff; border-radius: 14px; padding: 5px 8px 7px; display: grid; grid-template-columns: repeat(3, minmax(34px, auto)); justify-items: center; align-items: center; gap: 2px 3px; }
+.cb-tn { grid-column: 1 / -1; font-size: .7rem; font-weight: 800; white-space: nowrap; }
+.cb-sp { display: flex; flex-direction: column; align-items: center; }
+.cb-sp small { font-size: .58rem; font-weight: 800; opacity: .8; line-height: 1.1; }
+.cb-sp-N { grid-column: 2; grid-row: 2; } .cb-sp-W { grid-column: 1; grid-row: 3; } .cb-sp-E { grid-column: 3; grid-row: 3; } .cb-sp-S { grid-column: 2; grid-row: 4; }
+.cb-sp-S { flex-direction: column-reverse; }
+.cb-c { background: #fff; border-radius: 6px; padding: 1px 4px; min-width: 34px; text-align: center; font-weight: 800; font-size: .98rem; line-height: 1.35; }
+.cb-c.new { box-shadow: 0 0 0 3px var(--gold); }
+.cb-c.none { background: rgba(255, 255, 255, .14); color: transparent; }
+.cb-note { border-collapse: collapse; font-size: .92rem; margin: 0 0 4px; }
+.cb-note caption { text-align: left; font-weight: 800; font-size: .86rem; padding-bottom: 3px; }
+.cb-note th, .cb-note td { border: 1px solid var(--line); padding: 2px 9px; text-align: center; background: #fff; min-width: 30px; }
+.cb-note th { background: #f1efe6; font-weight: 800; font-size: .82rem; white-space: nowrap; }
+.cb-note td { font-weight: 700; }
+.cb-note td.q { color: #b9bfb3; }
+.cb-note td.k { background: #e3f7ea; }
+.cb-note tr.cb-left td, .cb-note tr.cb-left th { border-top: 2px solid #cfd5c6; }
+
+/* ---------- defend a whole deal (Final Boss 2) ---------- */
+.dp-ask { background: #fff7e0; border: 2px solid var(--gold); border-radius: 14px; padding: 10px 14px; margin-top: 12px; }
+.dp-ask .q-text { font-size: 1.15rem; margin: 4px 0 8px; }
+.dp-ask .choices { margin-top: 6px; }
+.dp-fb .feedback { margin-top: 10px; }
+
 </style>
   <style>
 /* Bridge Quest — phone & touch layout.
@@ -565,6 +603,21 @@ button, .card { touch-action: manipulation; -webkit-tap-highlight-color: transpa
   .example-row.ns { grid-template-columns: minmax(200px, 1fr); }
   .example-row.seats { gap: 6px 8px; }
   .example-row.seats .ex { padding: 6px 9px; }
+
+  /* ---- count board: the two "played" boxes may wrap; everything a little tighter ---- */
+  .cb { gap: 5px 5px; }
+  .cb-hand { padding: 3px 9px 4px; }
+  .cb-cards, .cb-ln { font-size: .92rem; word-spacing: -.2em; }
+  .cb-su { margin-right: 9px; }
+  .cb-opp { min-width: 0; padding: 3px 6px 4px; }
+  .cb-W, .cb-E { justify-self: stretch; }
+  .cb-ln { padding-left: 1.1em; text-indent: -1.1em; }
+  .cb-ln.out { margin: 0 -3px; padding: 0 3px 0 calc(1.1em + 3px); }
+  .cb-out { font-size: .56rem; padding: 0 4px; text-indent: 0; }
+  .cb-trick { padding: 4px 5px 6px; grid-template-columns: repeat(3, minmax(30px, auto)); }
+  .cb-c { min-width: 30px; font-size: .9rem; padding: 1px 3px; }
+  .cb-note { font-size: .86rem; }
+  .cb-note th, .cb-note td { padding: 2px 6px; min-width: 26px; }
 
   /* ---- playing cards: suits wrap onto extra rows; long suits squeeze to fit the screen ---- */
   .card { width: 52px; height: 74px; border-radius: 8px; }
@@ -794,7 +847,7 @@ button, .card { touch-action: manipulation; -webkit-tap-highlight-color: transpa
 </head>
 <body>
   <div id="app"></div>
-  <div class="build-tag">Bridge Quest · version 2026-11-14 (11) · 22 lessons · duplicate</div>
+  <div class="build-tag">Bridge Quest · version 2026-11-16 (14) · 25 lessons · duplicate</div>
   <noscript>Bridge Quest needs JavaScript turned on.</noscript>
   <!-- Duplicate MiniBridge: the address of the results server.  Leave it empty ('') to hide the Duplicate tile. -->
   <script>window.BQ_SERVER = 'https://bridgequest-server-production.up.railway.app';</script>
@@ -1612,11 +1665,13 @@ window.BQ_COURSE = [
   // ---- JumpStart 2: competing in the auction ----
   { id: 'overcalls', kind: 'bid', section: 'JumpStart 2 — Competing in the Auction', icon: '⚔️', title: 'Overcalls', short: 'Overcalls', blurb: 'The opponents opened! Jump in with 10-5-2, and help partner as advancer.' },
   { id: 'takeoutx', kind: 'bid', icon: '❌', title: 'Takeout Doubles', short: 'Takeout X', blurb: 'Double to say “partner, pick a suit!” — and how to answer.' },
-  { id: 'moretox', kind: 'bid', icon: '❌', title: 'More Takeout Doubles: Free Bids & Cuebids', short: 'More TOX', blurb: 'When RHO bids, cuebids, and the doubler’s second bid.' },
   { id: 'play5', kind: 'play', icon: '🕵️', title: 'Card Play 5: Listen to the Auction', short: 'Detective', blurb: 'Use the opponents’ bidding to find their high cards.' },
   { id: 'ocvx', kind: 'bid', icon: '⚖️', title: 'Overcall or Double?', short: 'OC or X?', blurb: 'Choose the best way into the auction.' },
-  { id: 'defense4', kind: 'defense', icon: '🛡️', title: 'Defense 4', short: 'Defense 4', blurb: 'More defense — coming soon.' },
+  { id: 'defense4', kind: 'defense', icon: '🛡️', title: 'Defense 4: Signals', short: 'Signals', blurb: 'Talk to partner with your cards: high means yes, low means no.' },
+  { id: 'moretox', kind: 'bid', icon: '❌', title: 'More Takeout Doubles: Free Bids & Cuebids', short: 'More TOX', blurb: 'When RHO bids, cuebids, and the doubler’s second bid.' },
+  { id: 'play6', kind: 'play', icon: '🔢', title: 'Card Play 6: Count Out the Hand', short: 'Counting', blurb: 'Follow two whole deals card by card, counting points and cards like a detective.' },
   { id: 'preempts', kind: 'bid', icon: '🚧', title: 'Preempts, Weak Twos & the Strong 2♣', short: 'Preempts', blurb: 'Weak hands with long suits jump high to get in the way.' },
+  { id: 'boss2', kind: 'boss', icon: '🏆', title: 'Final Boss 2: Club Hands', short: 'Final Boss 2', blurb: 'Real deals from the Atlanta Duplicate Bridge Club — bid them, declare them, and defend them.' },
 ];
 
 </script>
@@ -3082,7 +3137,10 @@ BQ_LESSONS.basics = {
   // auction chips from responder's point of view: partner opens, you respond, partner rebids, you ?
   const A = (open, resp, rebid, pre) => [...(pre || []), { who: 'Partner', b: open }, { who: 'Opponent', b: 'P' }, { who: 'You', b: resp }, { who: 'Opponent', b: 'P' }, { who: 'Partner', b: rebid }, { who: 'Opponent', b: 'P' }, { who: 'You', b: '?' }];
   const OA = (open, resp) => [{ who: 'You', b: open }, { who: 'Opponent', b: 'P' }, { who: 'Partner', b: resp }, { who: 'Opponent', b: 'P' }, { who: 'You', b: '?' }];
-  const bid = (kicker, hand, auction, a, hcp, why, extra) => Object.assign({ t: 'bid', kicker, hand, auction, a, hcpIs: hcp, why, ladder: R, levels: 4, q: 'What do you bid now?' }, extra);
+  // camp boards say which seat you are in ("you are East"); the auction table and hand label use it
+  const SEAT = { North: 'N', East: 'E', South: 'S', West: 'W' };
+  const bid = (kicker, hand, auction, a, hcp, why, extra) => Object.assign({ t: 'bid', kicker, hand, auction, a, hcpIs: hcp, why, ladder: R, levels: 4, q: 'What do you bid now?',
+    seat: SEAT[(kicker.match(/you are (North|East|South|West)/) || [])[1]] || 'S' }, extra);
   const yn = (kicker, q, a, why) => ({ t: 'mc', kicker, q, choices: ['Forcing — partner must bid again', 'Not forcing — partner may pass'], a, layout: 'wide', why, ladder: R });
 
   BQ_LESSONS.rebids2 = {
@@ -3673,9 +3731,9 @@ BQ_LESSONS.basics = {
           <p class="muted">These hands take longer than the other lessons. Take your time.</p>`,
       },
       /* ---------- Board 9 ---------- */
-      { t: 'bid', kicker: '🏕️ Board 9 — you are North, the dealer', q: 'What do you open?', hand: B9.N, a: '1H', check: 'open', ladder: 'opening',
+      { t: 'bid', kicker: '🏕️ Board 9 — you are North, the dealer', seat: 'N', q: 'What do you open?', hand: B9.N, a: '1H', check: 'open', ladder: 'opening',
         why: '16 HCP and six hearts → open your major: 1♥.' },
-      { t: 'bid', kicker: '🏕️ Board 9', q: 'Partner raised to 2♥ (3+ hearts, 6–9 HCP). What now?', hand: B9.N, levels: 4, ladder: 'rebid1',
+      { t: 'bid', kicker: '🏕️ Board 9 — you are North', seat: 'N', q: 'Partner raised to 2♥ (3+ hearts, 6–9 HCP). What now?', hand: B9.N, levels: 4, ladder: 'rebid1',
         auction: [ch('You', '1H'), ch('Opponent', 'P'), ch('Partner', '2H'), ch('Opponent', 'P'), ch('You', '?')], a: '4H', ok: ['3H'],
         why: '16 HCP is “medium” — but you also have a <b>six-card</b> suit and a singleton club. With a fit, that shape is worth extra. At camp we bid <b>4♥</b>. (3♥, inviting, earns half a point.)' },
       {
@@ -3688,10 +3746,10 @@ BQ_LESSONS.basics = {
       /* ---------- Board 11 ---------- */
       { t: 'bid', kicker: '🏕️ Board 11 — you are South, the dealer', q: 'What do you open?', hand: B11.S, a: '1S', check: 'open', ladder: 'opening',
         why: '14 HCP with five spades → 1♠.' },
-      { t: 'mc', kicker: '🏕️ Board 11', q: 'You opened 1♠ and partner responded <b>2♦</b>. What does partner promise?', layout: 'wide', ladder: 'respmajor',
+      { t: 'mc', kicker: '🏕️ Board 11 — you are South', q: 'You opened 1♠ and partner responded <b>2♦</b>. What does partner promise?', layout: 'wide', ladder: 'respmajor',
         choices: ['10+ HCP and 5+ diamonds', '6–9 HCP and 3 spades', '4 diamonds and a weak hand'], a: 0,
         why: 'A new suit at the 2-level promises 10+ HCP, and 2♦ over 1♠ shows five or more diamonds.' },
-      { t: 'bid', kicker: '🏕️ Board 11', q: 'What is your rebid?', hand: B11.S, levels: 4, ladder: 'rebid1',
+      { t: 'bid', kicker: '🏕️ Board 11 — you are South', q: 'What is your rebid?', hand: B11.S, levels: 4, ladder: 'rebid1',
         auction: [ch('You', '1S'), ch('Opponent', 'P'), ch('Partner', '2D'), ch('Opponent', 'P'), ch('You', '?')], a: '2H',
         whyWrong: { '2S': 'Five spades isn’t enough to rebid them. Show your other suit!' },
         why: 'You have four hearts too! Bid them at the lowest level: 2♥. Partner (with four hearts) will jump to 4♥.' },
@@ -3705,7 +3763,7 @@ BQ_LESSONS.basics = {
       /* ---------- Board 3 ---------- */
       { t: 'bid', kicker: '🏕️ Board 3 — you are South, the dealer', q: 'What do you open?', hand: B3.S, a: '1C', check: 'open', ladder: 'opening',
         why: '13 HCP, no 5-card major, not 15–17 → open your long minor: 1♣.' },
-      { t: 'bid', kicker: '🏕️ Board 3', q: 'Partner responded 1♠. What is your rebid?', hand: B3.S, levels: 4, ladder: 'rebid1',
+      { t: 'bid', kicker: '🏕️ Board 3 — you are South', q: 'Partner responded 1♠. What is your rebid?', hand: B3.S, levels: 4, ladder: 'rebid1',
         auction: [ch('You', '1C'), ch('Opponent', 'P'), ch('Partner', '1S'), ch('Opponent', 'P'), ch('You', '?')], a: '1N',
         whyWrong: { '2S': 'Partner promised FOUR spades. You have three — that’s only 7 together.', '2C': 'Five clubs isn’t enough to rebid. With a balanced minimum, rebid 1NT.' },
         why: 'Balanced, 12–14, no spade fit → 1NT. Partner (13 HCP) will bid 3NT.' },
@@ -3952,7 +4010,7 @@ BQ_LESSONS.basics = {
         choices: ['Hearts or diamonds', 'Spades or hearts', 'Any of the four suits'], a: 0,
         why: 'Clubs and spades are THEIR suits now. Partner’s double showed the other suits, and the two that are left are hearts and diamonds.',
       },
-      bid('Partner doubled 1♣, RHO bid 1♠', '74.J73.J9543.652', FREE_A, 'P', 'advXfree', 'Only 2 HCP. Last lesson you had to bid with this hand — but now RHO has bid, so you are free. Pass!', { whyWrong: { '2D': 'A free bid shows 6+ points. You have 2 HCP and you don’t have to bid — pass.' } }),
+      bid('Partner doubled 1♣, RHO bid 1♠', '74.J73.J9543.652', FREE_A, 'P', 'advXfree', 'Only 2 HCP. In the Takeout Doubles lesson you had to bid with this hand — but now RHO has bid, so you are free. Pass!', { whyWrong: { '2D': 'A free bid shows 6+ points. You have 2 HCP and you don’t have to bid — pass.' } }),
       bid('Partner doubled 1♣, RHO bid 1♠', '65.AK73.Q7543.42', FREE_A, '2H', 'advXfree', '9 HCP: enough for a free bid. Hearts or diamonds? With 6+ HCP, choose the 4-card MAJOR: 2♥. (9 is the in-between number, so 2♦ or a jump to 3♥ are OK too.)', { ok: ['2D', '3H'], whyWrong: { P: 'With 9 HCP you are strong enough to bid. Tell partner about your hearts!' } }),
       bid('Partner doubled 1♣, RHO bid 1♠', '8765.A73.AK93.52', FREE_A, '3D', 'advXfree', '11 HCP → jump! Spades is THEIR suit now, so your only 4-card suit is diamonds. The cheapest diamond bid is 2♦, so jump to 3♦.', { whyWrong: { '2D': '2♦ shows only 6–9. With 11 HCP, jump to 3♦.', '2S': 'Spades is the opponents’ suit now — don’t pick it as trumps!' } }),
       bid('Partner doubled 1♣, RHO bid 1♠', '765.AQ873.A53.42', FREE_A, '3H', 'advXfree', '10 HCP + 1 for the fifth heart = 11 points → jump. The cheapest heart bid is 2♥, so jump to 3♥.', { whyWrong: { '2H': '2♥ shows only 6–9 points. You have 11 — jump!' } }),
@@ -4335,6 +4393,695 @@ BQ_LESSONS.basics = {
 
 </script>
   <script>
+/* Defense 4: Signals — talking to partner with your cards.  19 graded + challenge.
+   An original lesson in the style of Defense 1-3 (the JumpStart manuals have no class for this).
+   Standard signals.  When PARTNER leads a suit: ATTITUDE (high = "I like it", low = "I don't"), unless you are playing
+   third hand high to win the trick or force out an honor.  When an OPPONENT leads a suit: COUNT (high-low = even,
+   lowest = odd).  The first discard is attitude.  The lesson points out that upside-down signals are more common;
+   the challenge uses them. */
+(function () {
+  // Declarer is South, dummy is North.  `you` is East or West.
+  const roles = (you) => ({ N: 'Dummy', S: 'Declarer', [you]: 'You', [you === 'E' ? 'W' : 'E']: 'Partner' });
+  const P = (you, leader, play, cards, a, contract, extra) => Object.assign({
+    t: 'pickcard', contract, declarer: 'S',
+    trick: { leader, play, trump: contract[1] === 'N' ? null : contract[1], you, roles: roles(you) }, cards, a,
+    pickLabel: 'Your cards — click the one you play',
+  }, extra);
+  const SUITCLS = { '♠': 's-S', '♥': 's-H', '♦': 's-D', '♣': 's-C' };
+  const col = (s) => s.replace(/[♠♥♦♣]/g, (x) => `<span class="${SUITCLS[x]}">${x}</span>`);
+  const ex = (title, lines, note) => `<div class="ex"><div class="ex-t">${title}</div><div class="hand-text">${col(lines)}</div>${note ? `<div class="muted" style="font-size:.9rem;margin-top:4px">${col(note)}</div>` : ''}</div>`;
+  const seats = (o) => `<div class="example-row seats">${['N', 'W', 'E', 'S'].filter((s) => o[s]).map((s) => `<div class="seat-${s}">${o[s]}</div>`).join('')}</div>`;
+
+  BQ_LESSONS.defense4 = {
+    id: 'defense4', icon: '🛡️', title: 'Defense 4: Signals',
+    steps: [
+      {
+        t: 'teach', title: 'Talk to partner — with your cards!',
+        owl: 'You are not allowed to talk to partner while you play. But your CARDS can talk!',
+        html: `<p>Lots of times you are <b>not</b> trying to win the trick — partner’s card is already winning, or you can’t beat dummy’s card. Then you get to <b>choose</b> which small card to play… and that choice can send partner a message. It is called a <b>signal</b>.</p>
+          <div class="callout c-green">👍 <b>A HIGH card says: “I LIKE this suit — keep leading it!”</b></div>
+          <div class="callout c-red">👎 <b>A LOW card says: “I DON’T like this suit — try something else.”</b></div>
+          <p class="big">High = yes. Low = no.</p>
+          <p class="muted">This signal is called <b>attitude</b> — how you feel about the suit. You give it when <b>partner</b> leads a suit. Later in this lesson you’ll learn a different signal for when <b>declarer</b> leads.</p>`,
+      },
+      {
+        t: 'mc', kicker: 'High or low?', q: 'Partner leads a suit and you play a HIGH card, like the 9. What are you telling partner?', layout: 'wide',
+        choices: ['“I like this suit — keep going!”', '“I don’t like this suit.”', '“I have no more of this suit.”'], a: 0,
+        why: 'High = yes! A high card tells partner you like the suit and want it led again.',
+      },
+      {
+        t: 'teach', title: 'When do you LIKE partner’s suit?',
+        html: `<p>You are East, defending 4♠. Partner leads the <b>♥A</b>. In Defense 1 you learned to lead the top of touching honors — so partner has the <b>♥K</b> too.</p>
+          ${seats({ N: ex('North · Dummy', '♥ 7 5 3'), W: ex('West · Partner', '♥ A K …', 'leads the ♥A'), E: ex('East · You', '♥ Q 8 2') })}
+          <p>You have the <b>queen</b>! Ace, king, then your queen: hearts are great for your side. Play the <b>♥8</b> — a high card — to say “I like it!”</p>
+          <div class="callout"><b>You like the suit when…</b><ul style="margin:6px 0 0">
+            <li>you have a <b>high honor</b> that helps (the A, K or Q), or</li>
+            <li>in a <b>trump contract</b>, you have only <b>two</b> cards — so you can trump the third round.</li></ul></div>`,
+      },
+      P('E', 'W', ['HA', 'H3'], '-.Q82.-.-', ['H8'], '4S', {
+        kicker: 'I like it!', q: 'Defending 4♠. Partner leads the ♥A (so partner has the ♥K too). Dummy plays the ♥3. Which heart do you play?',
+        dummyCards: '-.75.-.-', dummyLabel: 'Dummy (North) — after the ♥3',
+        whyWrong: { H2: 'The ♥2 says “I don’t like hearts.” Partner might switch suits — and your queen might never win a trick!', HQ: 'Don’t throw your queen away — it is going to WIN the third round of hearts.' },
+        why: 'Play the ♥8. A HIGH card says “I like hearts!” Partner plays the ♥K, then leads a third heart, and your ♥Q wins it.',
+      }),
+      P('E', 'W', ['HA', 'H3'], '-.962.-.-', ['H2'], '4S', {
+        kicker: 'I don’t like it', q: 'Same lead: partner’s ♥A against 4♠, and dummy plays the ♥3. This time your hearts are different. Which one do you play?',
+        dummyCards: '-.75.-.-', dummyLabel: 'Dummy (North) — after the ♥3',
+        whyWrong: { H9: 'The ♥9 would shout “I love hearts!” — but you have no heart honor, and three cards, so you can’t help.', H6: 'Make your message clear: to say “no”, play your very LOWEST card.' },
+        why: 'Play the ♥2. Your lowest card says “I don’t like hearts — I have nothing here to help.” Now partner can think about trying another suit.',
+      }),
+      {
+        t: 'teach', title: 'Make your signal easy to read',
+        html: `<p>Partner has to <b>notice</b> your signal, so make it loud and clear.</p>
+          <div class="callout c-green"><b>To say YES:</b> play the <b>highest card you can spare</b>. &nbsp; From K-<b>9</b>-7-3, play the 9 — not the 7.</div>
+          <div class="callout c-red"><b>To say NO:</b> play your very <b>lowest</b> card. &nbsp; From 8-6-<b>2</b>, play the 2.</div>
+          <p>“Spare” is the important word. Never signal with a card that could <b>win a trick</b> later — your king stays home!</p>`,
+      },
+      {
+        t: 'mc', kicker: 'Say it loudly', q: 'You hold ♦ K 9 7 3 and you want to say “I LIKE diamonds.” Which card says it best?',
+        choices: ['The ♦9', 'The ♦7', 'The ♦3', 'The ♦K'], a: 0,
+        why: 'The ♦9 is the highest card you can spare. A 7 is harder to read, the 3 says “no”, and the king is far too valuable to throw away.',
+        whyWrong: { 3: 'The king might win a trick later — keep it!' },
+      },
+      P('E', 'W', ['SK', 'S4'], 'A93.-.-.-', ['S9'], '3N', {
+        kicker: 'I like it!', q: 'Defending 3NT. Partner leads the ♠K — the top of a sequence like K-Q-J. Dummy plays the ♠4. What do you play?',
+        dummyCards: '6.-.-.-', dummyLabel: 'Dummy (North) — after the ♠4',
+        whyWrong: { SA: 'Partner’s king is already winning. Putting your ace on it uses up two of your side’s high cards on ONE trick.', S3: 'The ♠3 says “I don’t like spades.” Partner might switch — and you are holding the ACE!' },
+        why: 'Partner’s ♠K is winning the trick, so send the good news: the ♠9 says “I like spades — I have help for you!” Partner will keep leading them.',
+      }),
+      P('E', 'W', ['DQ', 'DA'], '-.-.K83.-', ['D8'], '3N', {
+        kicker: 'I like it!', q: 'Defending 3NT. Partner leads the ♦Q (the top of Q-J-10). Declarer plays dummy’s ♦A. What do you play?',
+        dummyCards: '-.-.5.-', dummyLabel: 'Dummy (North) — after the ♦A',
+        whyWrong: { DK: 'Your king can’t beat the ace — don’t throw it away!', D3: 'The ♦3 says “I don’t like diamonds” — but you have the KING. Partner needs to know!' },
+        why: 'You can’t beat dummy’s ace, so this is a time to signal. The ♦8 says “I like diamonds!” When partner gets in, another diamond lead finds your king.',
+      }),
+      {
+        t: 'teach', title: 'Signal… or third hand high?',
+        html: `<p>In Defense 2 you learned <b>third hand high</b>. So how do you know which one to do?</p>
+          <div class="callout blue"><b>Is your side still trying to WIN this trick?</b> Partner led a low card and nobody on your side is winning yet. → <b>Third hand HIGH.</b></div>
+          <div class="callout c-green"><b>Is the trick already decided?</b> Partner’s card is winning, or you can’t beat dummy’s card. → <b>SIGNAL</b>: high = I like it, low = I don’t.</div>`,
+      },
+      P('E', 'W', ['C5', 'C4'], '-.-.-.K82', ['CK'], '3N', {
+        kicker: 'Signal or third hand high?', q: 'Defending 3NT. Partner leads the ♣5 and dummy plays the ♣4. What do you play?',
+        dummyCards: '-.-.-.7', dummyLabel: 'Dummy (North) — after the ♣4',
+        whyWrong: { C8: 'The ♣8 would be a nice signal — but nobody on your side is winning this trick yet! Declarer would win it cheaply.', C2: 'Nobody on your side is winning this trick yet — declarer would win it cheaply.' },
+        why: 'Partner led LOW, so this is “third hand high”, not a signal. Play the ♣K to win the trick or to make declarer use the ace.',
+      }),
+      {
+        t: 'teach', title: 'Just two cards? Play high-low',
+        html: `<p>Against a <b>trump</b> contract, a short suit is good news — when you run out, you can <b>trump</b>!</p>
+          ${seats({ N: ex('North · Dummy', '♠ J 6 4'), W: ex('West · Partner', '♠ A K 8 5 2', 'leads the ♠A'), E: ex('East · You', '♠ 9 3', '…and some small trumps') })}
+          <p>With a <b>doubleton</b> (two cards), play the <b>high</b> one first and the <b>low</b> one next. Bridge players call it <b>high-low</b>.</p>
+          <div class="callout c-green">High-low says: <b>“I started with only two. Lead it a third time and I will trump it!”</b></div>`,
+      },
+      P('E', 'W', ['SA', 'S4'], '93.-.-.-', ['S9'], '4H', {
+        kicker: 'High-low', q: 'Defending 4♥ (hearts are trump). Partner leads the ♠A and dummy plays the ♠4. You have two spades and some small trumps. Which spade do you play?',
+        dummyCards: 'J6.-.-.-', dummyLabel: 'Dummy (North) — after the ♠4',
+        whyWrong: { S3: 'Low says “I don’t like spades.” Partner might switch suits — and you would never get to trump a spade.' },
+        why: 'Start your high-low with the ♠9. Next time you will play the ♠3, and partner will know you have no spades left.',
+      }),
+      {
+        t: 'mc', kicker: 'Now you are West', layout: 'wide',
+        q: 'Sit in WEST’s chair. You led the ♠A and partner played the ♠9. You led the ♠K and partner played the ♠3. High, then low! What do you lead next?',
+        diagram: seats({ N: ex('North · Dummy', '♠ J'), W: ex('West · You', '♠ 8 5 2'), E: ex('East · Partner', 'played ♠9, then ♠3') }),
+        choices: ['A third spade — partner will trump it', 'A trump', 'Another suit — dummy’s ♠J is high now'], a: 0,
+        why: 'High-low shows a doubleton, so partner has no spades left. Lead a third spade and partner trumps it — it doesn’t matter that dummy’s ♠J is “high”!',
+      },
+      {
+        t: 'teach', title: 'Watch partner’s card — it changes what you do',
+        html: `<p>You are West. Against 3NT you lead the <b>♥K</b> from ♥ K Q 10 4. Dummy has ♥ 7 5. Your king <b>wins</b> the trick. Now what? Look at the card partner played!</p>
+          <div class="callout c-green"><b>Partner played the ♥9 (high).</b> “I like hearts!” Partner has the ace or the jack. <b>Lead hearts again.</b></div>
+          <div class="callout c-red"><b>Partner played the ♥2 (low).</b> “I don’t like hearts.” Partner has no ace and no jack — so <b>declarer</b> has them both, and let your king win on purpose! Lead another heart and declarer’s A <b>and</b> J both win. <b>Switch suits</b> and wait for partner to lead hearts.</div>`,
+      },
+      {
+        t: 'mc', kicker: 'Read the signal', layout: 'wide',
+        q: 'You lead the ♥K from ♥ K Q 10 4 against 3NT. Dummy has ♥ 7 5. Partner plays the ♥9, declarer plays the ♥3, and your king wins. What do you do next?',
+        choices: ['Lead another heart — partner likes them', 'Switch to a different suit', 'It makes no difference'], a: 0,
+        why: 'The ♥9 is a high card: “I like hearts!” Partner has the ace or the jack, so keep leading hearts.',
+      },
+      {
+        t: 'mc', kicker: 'Read the signal', layout: 'wide',
+        q: 'Same lead — the ♥K from ♥ K Q 10 4. This time partner plays the ♥2, declarer plays the ♥6, and your king wins. What is partner’s ♥2 telling you?',
+        choices: ['“I don’t have the ace or the jack” — so switch suits', '“I love hearts — keep going!”', 'Nothing. A 2 is just a 2.'], a: 0,
+        why: 'Low = no. Partner has no heart honor, so declarer is sitting with the A and J, waiting for you to lead hearts again. Switch suits! Later partner can lead a heart THROUGH declarer.',
+      },
+      {
+        t: 'teach', title: 'Is that card high… or low?',
+        html: `<p>A 6 can be a <b>high</b> card or a <b>low</b> card! To find out, look at the small cards you can <b>see</b> — in your own hand and in dummy.</p>
+          ${seats({ N: ex('North · Dummy', '♣ 5 4 3'), W: ex('West · You', '♣ A K 2', 'you led the ♣A'), E: ex('East · Partner', 'played the ♣6') })}
+          <p>You have the 2. Dummy has the 3, 4 and 5. So partner has <b>no club lower than the 6</b> — the 6 is partner’s <b>lowest</b> club. It means “I don’t like clubs.”</p>
+          <div class="callout">If you <b>can’t</b> see the lower cards, partner might be holding them — then the 6 is probably a <b>high</b> card.</div>`,
+      },
+      {
+        t: 'mc', kicker: 'High or low?', layout: 'wide',
+        q: 'You lead the ♦A. Partner plays the ♦7. Is the 7 a high card or a low card?',
+        diagram: seats({ N: ex('North · Dummy', '♦ 6 4 3'), W: ex('West · You', '♦ A K 5 2'), E: ex('East · Partner', 'played the ♦7') }),
+        choices: ['LOW — I can see the 2, 3, 4, 5 and 6, so the 7 is partner’s smallest', 'HIGH — a 7 is always a big card', 'There is no way to tell'], a: 0,
+        why: 'You hold the 2 and 5. Dummy holds the 3, 4 and 6. Every diamond below the 7 is in sight, so the 7 is partner’s LOWEST card: “I don’t like diamonds.”',
+      },
+      {
+        t: 'teach', title: 'Discards talk too',
+        html: `<p>When you can’t follow suit and you are not trumping, you throw a card away. That is a <b>discard</b> — and your <b>first</b> discard is a signal too.</p>
+          <div class="callout c-green"><b>Throw a HIGH card</b> in a suit: “Partner, lead <b>this</b> suit!”</div>
+          <div class="callout c-red"><b>Throw a LOW card</b> in a suit: “I <b>don’t</b> want this suit.”</div>
+          <p>Remember “spare”: don’t throw away a card that might win a trick just to send a message.</p>`,
+      },
+      P('E', 'S', ['CA', 'C4', 'C5'], 'KQJ92.-.842.-', ['S9'], '3N', {
+        kicker: 'Your first discard', q: 'Defending 3NT. Declarer is cashing clubs and you have none left, so you must discard. You want partner to lead SPADES. Which card do you throw?',
+        ok: ['D2'],
+        whyWrong: {
+          S2: 'The ♠2 says “I DON’T like spades” — the opposite of what you want!', D8: 'A high diamond says “lead diamonds” — but your good suit is spades.', D4: 'Make it clear: to say “no” to diamonds, throw your very lowest one.',
+          SK: 'Don’t throw away a winner! Signal with the highest card you can SPARE: the ♠9.', SQ: 'Don’t throw away a winner! Signal with the highest card you can SPARE: the ♠9.', SJ: 'Don’t throw away a winner! Signal with the highest card you can SPARE: the ♠9.',
+        },
+        why: 'Throw the ♠9. A HIGH spade says “Partner, lead spades!” — and you still have K-Q-J to take tricks with. (The ♦2 says “not diamonds”, which helps a little too.)',
+      }),
+      {
+        t: 'mc', kicker: 'Read the discard', layout: 'wide',
+        q: 'Declarer is cashing a long suit. Partner can’t follow, and partner’s FIRST discard is the ♥2. When you win a trick, which suit should you NOT lead?',
+        choices: ['Hearts — a low heart says “I don’t like hearts”', 'Spades', 'Whatever suit partner threw is the one to lead'], a: 0,
+        why: 'A LOW discard says “I don’t want this suit.” Partner threw the ♥2, so stay away from hearts and try a different suit.',
+      },
+      {
+        t: 'mc', kicker: 'Put it together', layout: 'wide',
+        q: 'Defending 4♥. Partner leads the ♠A. You hold ♠ 7 2 and three small trumps. Which spade do you play, and why?',
+        choices: ['The ♠7 — high-low shows two cards, so I can trump the third round', 'The ♠2 — I have no spade honor', 'It doesn’t matter with such small cards'], a: 0,
+        why: 'In a trump contract a doubleton is a reason to LIKE the suit. Play the ♠7 and then the ♠2. Partner leads a third spade and you trump it!',
+      },
+      {
+        t: 'teach', title: 'When DECLARER leads: show COUNT',
+        owl: 'When declarer leads a suit, partner usually doesn’t care whether you LIKE it. Partner wants to know HOW MANY you have.',
+        html: `<p>When an <b>opponent</b> leads a suit, your small card tells partner how many cards you have in it. That is a <b>count</b> signal.</p>
+          <div class="callout c-black"><b>EVEN number</b> (2 or 4): play <b>high, then low</b>. &nbsp; From 8-<b>3</b>: the 8 first, then the 3.</div>
+          <div class="callout c-teal"><b>ODD number</b> (3 or 5): play your <b>lowest</b> first. &nbsp; From 9-6-<b>2</b>: the 2.</div>
+          <p>Why does partner care? Partner can <b>count the whole suit</b> — 13 minus dummy, minus partner’s own cards, minus yours — and find out exactly how many declarer has. That tells partner when to take an ace (remember the <b>hold-up</b> from Defense 3?).</p>`,
+      },
+      P('W', 'S', ['C4'], '-.-.-.83', ['C8'], '3N', {
+        kicker: 'Show count', q: 'Defending 3NT. Declarer leads the ♣4 toward dummy’s ♣K Q J 10 5. You have two clubs. Which one do you play?',
+        dummyCards: '-.-.-.KQJT5', dummyLabel: 'Dummy (North) clubs',
+        whyWrong: { C3: 'Lowest first says you have an ODD number. You have two — an even number — so start high.' },
+        why: 'Two cards is an EVEN number, so play high-low: the ♣8 now, the ♣3 next time. Partner will know you had two.',
+      }),
+      P('W', 'S', ['C4'], '-.-.-.962', ['C2'], '3N', {
+        kicker: 'Show count', q: 'Same clubs: declarer leads the ♣4 toward dummy’s ♣K Q J 10 5. This time you have THREE clubs. Which one do you play?',
+        dummyCards: '-.-.-.KQJT5', dummyLabel: 'Dummy (North) clubs',
+        whyWrong: { C9: 'High first says you have an EVEN number. You have three — an odd number — so play your lowest.', C6: 'For an odd number, play your very LOWEST card so partner can’t misread it.' },
+        why: 'Three is an ODD number, so play your lowest card: the ♣2.',
+      }),
+      {
+        t: 'mc', kicker: 'Read the count', layout: 'wide',
+        q: 'Declarer leads spades twice. The first time, partner plays the ♠7. The second time, partner plays the ♠2. How many spades did partner start with?',
+        choices: ['An even number — 2 (or 4)', 'An odd number — 3 (or 5)', 'Just 1'], a: 0,
+        why: 'High, then low = an EVEN number. Partner started with two spades (or four).',
+      },
+      {
+        t: 'mc', kicker: 'Count + hold-up', layout: 'wide',
+        q: 'Dummy has ♦ K Q J 10 5 and no other entry. You have ♦ A 6 3. Declarer leads a diamond and partner plays the ♦2 — the LOWEST, showing an odd number: three. On which round should you take your ace?',
+        diagram: seats({ N: ex('North · Dummy', '♦ K Q J 10 5', 'no other entry'), W: ex('West · Partner', 'played the ♦2', 'lowest = odd number'), E: ex('East · You', '♦ A 6 3') }),
+        choices: ['Round 1', 'Round 2', 'Round 3'], a: 1,
+        why: 'Count the suit: 13 − 5 (dummy) − 3 (you) − 3 (partner) = 2. Declarer has just two diamonds, so take your ace on round 2, when declarer plays the last one. Partner’s count signal told you exactly when!',
+      },
+      {
+        t: 'teach', title: 'Heads up: UPSIDE-DOWN signals',
+        html: `<p>Everything in this lesson is <b>standard</b> signals. But many players — in fact, <b>most</b> experienced players today — use <b>upside-down</b> signals, where it is the other way around:</p>
+          <div class="callout c-green"><b>Upside-down attitude:</b> LOW = “I like it.” HIGH = “I don’t.”</div>
+          <div class="callout c-black"><b>Upside-down count:</b> low, then high = an EVEN number.</div>
+          <p>Neither way is “right” — it is something <b>you and partner agree on</b> before you play. You can also ask the opponents which way they signal, so you can read their cards too.</p>`,
+      },
+      {
+        t: 'teach', title: 'Signals: the short version',
+        owl: 'A signal only works if somebody is watching. Look at EVERY card partner plays!',
+        html: `<div class="callout c-green">👍 <b>Partner leads → ATTITUDE.</b> High = “I like it.” Low = “I don’t.”</div>
+          <div class="callout blue"><b>High-low with two cards</b> in a trump contract: partner can give you a ruff.</div>
+          <div class="callout c-black"><b>Declarer leads → COUNT.</b> High-low = even. Lowest = odd.</div>
+          <div class="callout"><b>Your first discard</b> is an attitude signal.</div>
+          <p>Signal when the trick is already decided. When your side still needs to win it, it’s <b>third hand high</b>. And check with partner: standard or upside-down?</p>`,
+      },
+      {
+        t: 'mc', challenge: true, layout: 'wide',
+        challengeNote: 'Today your partner plays UPSIDE-DOWN signals. Can you flip your thinking?',
+        q: 'Defending 4♠, partner leads the ♥A (so partner has the ♥K too). You hold ♥ Q 8 2 and you WANT partner to keep leading hearts. Playing upside-down signals, which card do you play?',
+        choices: ['The ♥2', 'The ♥8', 'The ♥Q'], a: 0,
+        whyWrong: { 1: 'In standard signals the 8 says “I like it” — but in upside-down signals a high card says “I DON’T like it.”', 2: 'Keep your queen — it will win the third round of hearts!' },
+        why: 'Upside-down: LOW = “I like it.” The ♥2 tells partner to keep going, and your ♥Q wins the third round.',
+      },
+    ],
+  };
+})();
+
+</script>
+  <script>
+/* Card Play 6: Count Out the Hand.  20 graded + challenge.
+   An original lesson: two made-up deals, followed card by card.
+     Deal 1 (4♠)  — count POINTS: West passed as dealer, then shows up with 10 HCP, so East has the ♠Q.
+                    Also counts a side suit (clubs) and the trumps as they are played.
+     Deal 2 (3NT) — count CARDS: both opponents show out, so West's whole shape is known: one club.
+   Every picture and every number answer is worked out from the full deal below (see mkDeal), not typed by hand.
+   tests/check.js replays both deals to make sure every card is legal. */
+(function () {
+  const SUITS = ['S', 'H', 'D', 'C'];
+  const SYM = { S: '♠', H: '♥', D: '♦', C: '♣' };
+  const NAME = { N: 'North', E: 'East', S: 'South', W: 'West' };
+  const ORDER = 'AKQJT98765432';
+  const PTS = { A: 4, K: 3, Q: 2, J: 1 };
+  const next = (s) => 'NESW'[('NESW'.indexOf(s) + 1) % 4];
+  const rk = (r) => (r === 'T' ? '10' : r);
+  const su = (s) => `<span class="s-${s}">${SYM[s]}</span>`;
+  const parse = (h) => { const p = h.split('.'); const o = {}; SUITS.forEach((s, i) => { o[s] = p[i] === '-' ? '' : p[i]; }); return o; };
+  const hcpOf = (h) => SUITS.reduce((t, s) => t + h[s].split('').reduce((a, r) => a + (PTS[r] || 0), 0), 0);
+
+  function mkDeal(spec) {
+    const hands = {};
+    'NESW'.split('').forEach((s) => { hands[s] = parse(spec.hands[s]); });
+    const cards = [];                                   // every card in the order it is played
+    spec.play.forEach((line, t) => {
+      const [leader, ...cs] = line.split(' ');
+      let seat = leader;
+      cs.forEach((c, i) => { cards.push({ seat, card: c, trick: t, pos: i, led: cs[0][0] }); seat = next(seat); });
+    });
+    const winnerOf = (four) => {
+      const led = four[0].card[0];
+      const score = (c) => (c.card[0] === spec.trump ? 100 : c.card[0] === led ? 50 : 0) + (13 - ORDER.indexOf(c.card[1]));
+      return four.reduce((b, c) => (score(c) > score(b) ? c : b)).seat;
+    };
+    function at(n) {                                    // everything a careful player knows after n cards
+      const left = {}; 'NESW'.split('').forEach((s) => { left[s] = Object.assign({}, hands[s]); });
+      const played = { W: { S: [], H: [], D: [], C: [] }, E: { S: [], H: [], D: [], C: [] } };
+      const out = { W: {}, E: {} }, seen = { W: 0, E: 0 };
+      for (let i = 0; i < n; i++) {
+        const c = cards[i], s = c.card[0], r = c.card[1];
+        left[c.seat][s] = left[c.seat][s].replace(r, '');
+        if (played[c.seat]) {
+          played[c.seat][s].push(r); seen[c.seat] += PTS[r] || 0;
+          if (s !== c.led) out[c.seat][c.led] = true;
+        }
+      }
+      const last = n ? cards[n - 1] : null;
+      const trick = last ? cards.filter((c, i) => c.trick === last.trick && i < n) : [];
+      const stillOut = {}; SUITS.forEach((s) => { stillOut[s] = left.W[s].length + left.E[s].length; });
+      return { left, played, out, seen, trick, stillOut, trickNo: last ? last.trick + 1 : 1, winner: trick.length === 4 ? winnerOf(trick) : null, last };
+    }
+    const D = { spec, hands, cards, at, winnerOf };
+    D.len = (seat, suit) => hands[seat][suit].length;
+    D.hcp = (seat) => hcpOf(hands[seat]);
+    D.oppHcp = 40 - hcpOf(hands.N) - hcpOf(hands.S);
+    return D;
+  }
+
+  /* The table picture after n cards.
+     o.known  'WH EH'  suit lengths the detective has worked out (shown in the notebook; the rest show ?)
+     o.hideHcp 'W'     seats whose "HCP shown" is hidden (because the question asks for it)
+     o.hideOut 'C'     suits whose "still out" number is hidden */
+  function board(D, n, o) {
+    o = o || {};
+    const st = D.at(n);
+    const known = (o.known || '').split(' ').filter(Boolean);
+    const hand = (seat, label, you) => `<div class="cb-hand cb-${seat}${you ? ' you' : ''}"><div class="cb-t">${label}</div><div class="cb-cards">${
+      SUITS.map((s) => `<span class="cb-su">${su(s)} ${st.left[seat][s] ? st.left[seat][s].split('').map(rk).join(' ') : '—'}</span>`).join('')}</div></div>`;
+    const opp = (seat) => `<div class="cb-opp cb-${seat}"><div class="cb-t">${NAME[seat]} <span>played</span></div>${
+      SUITS.map((s) => `<div class="cb-ln${st.out[seat][s] ? ' out' : ''}">${su(s)} ${st.played[seat][s].length ? st.played[seat][s].map(rk).join(' ') : '<i>·</i>'}${st.out[seat][s] ? ' <b class="cb-out">OUT</b>' : ''}</div>`).join('')}</div>`;
+    const bySeat = {}; st.trick.forEach((c) => { bySeat[c.seat] = c; });
+    const chip = (seat) => {
+      const c = bySeat[seat];
+      return `<div class="cb-sp cb-sp-${seat}"><small>${seat}</small>${c ? `<span class="cb-c s-${c.card[0]}${c === st.last ? ' new' : ''}">${SYM[c.card[0]]}${rk(c.card[1])}</span>` : '<span class="cb-c none">·</span>'}</div>`;
+    };
+    const head = !n ? `${NAME[next(D.spec.declarer)]} leads` : `Trick ${st.trickNo}${st.winner ? ' · ' + NAME[st.winner] + ' wins' : ''}`;
+    const cell = (seat, s) => (known.includes(seat + s) ? `<td class="k">${D.len(seat, s)}</td>` : '<td class="q">?</td>');
+    const hc = (seat) => ((o.hideHcp || '').includes(seat) ? '<td class="q">?</td>' : `<td>${st.seen[seat]}</td>`);
+    const outCell = (s) => ((o.hideOut || '').includes(s) ? '<td class="q">?</td>' : `<td>${st.stillOut[s]}</td>`);
+    const hcpLeft = o.hideHcp ? '<td class="q">?</td>' : `<td>${D.oppHcp - st.seen.W - st.seen.E}</td>`;
+    return `<div class="cb">${hand('N', 'North · Dummy')}${opp('W')}
+        <div class="cb-trick"><div class="cb-tn">${head}</div>${chip('N')}${chip('W')}${chip('E')}${chip('S')}</div>
+        ${opp('E')}${hand('S', 'South · You', true)}</div>
+      <table class="cb-note"><caption>📓 Detective notebook</caption>
+        <tr><th></th>${SUITS.map((s) => `<th>${su(s)}</th>`).join('')}<th>HCP shown</th></tr>
+        <tr><th>West had</th>${SUITS.map((s) => cell('W', s)).join('')}${hc('W')}</tr>
+        <tr><th>East had</th>${SUITS.map((s) => cell('E', s)).join('')}${hc('E')}</tr>
+        <tr class="cb-left"><th>Still out</th>${SUITS.map(outCell).join('')}${hcpLeft}</tr></table>`;
+  }
+
+  // a multiple-choice question about the deal after n cards.  `ans` (a number) is looked up in the choices.
+  function Q(D, n, o) {
+    const st = { t: 'mc', kicker: o.kicker, q: o.q, choices: o.choices.map(String), why: o.why, _count: { n } };
+    if (o.ans != null) {
+      st.a = st.choices.indexOf(String(o.ans));
+      if (st.a < 0) throw new Error('play6: answer ' + o.ans + ' is not one of the choices ' + st.choices);
+    } else st.a = o.a;
+    if (o.layout) st.layout = o.layout;
+    if (o.whyWrong) st.whyWrong = o.whyWrong;
+    if (o.auction4) st.auction4 = o.auction4;
+    else { st.contract = D.spec.contract; st.declarer = D.spec.declarer; st.diagram = board(D, n, o.b); }
+    return st;
+  }
+
+  /* ---------------- Deal 1: count the points ---------------- */
+  const A = mkDeal({
+    contract: '4S', trump: 'S', declarer: 'S',
+    hands: { N: 'KJ64.K5.AQ84.852', S: 'AT95.AQ6.K73.J64', W: '72.JT93.T95.AKQT', E: 'Q83.8742.J62.973' },
+    play: ['W CA C2 C3 C4', 'W CK C5 C7 C6', 'W CQ C8 C9 CJ', 'W HJ HK H2 H6', 'N SK S3 S5 S2', 'N SJ S8 S9 S7', 'N S4 SQ SA H3',
+      'S HA H9 H5 H4', 'S HQ HT D4 H7', 'S DK D5 D8 D2', 'S D3 D9 DA D6', 'N DQ DJ D7 DT', 'N S6 H8 ST CT'],
+  });
+  const A_AUCTION = { dealer: 'W', calls: ['P', '1D', 'P', '1S', 'P', '2S', 'P', '4S', 'P', 'P', 'P'], you: 'S' };
+
+  /* ---------------- Deal 2: count the cards ---------------- */
+  const Bd = mkDeal({
+    contract: '3N', trump: null, declarer: 'S',
+    hands: { N: '864.75.AKQ.KT432', S: 'AK52.A93.754.AJ5', W: '9.KQJT86.J9862.7', E: 'QJT73.42.T3.Q986' },
+    play: ['W HK H5 H2 H3', 'W HQ H7 H4 H9', 'W HJ S4 S3 HA', 'S SA S9 S6 S7', 'S SK D2 S8 ST', 'S D4 D6 DA D3', 'N DK DT D5 D8',
+      'N DQ SJ D7 D9', 'N CK C6 C5 C7', 'N C2 C8 CJ H6', 'S CA H8 C3 C9', 'S S5 HT C4 SQ', 'E CQ S2 DJ CT'],
+  });
+
+  BQ_LESSONS.play6 = {
+    id: 'play6', icon: '🔢', title: 'Card Play 6: Count Out the Hand',
+    _deals: [A, Bd],
+    steps: [
+      {
+        t: 'teach', title: 'Stop guessing. Start counting!',
+        owl: 'Great players are not guessing where the cards are. They are COUNTING.',
+        html: `<p>There are three magic numbers in bridge:</p>
+          <div class="callout c-black"><b>13</b> cards in every <b>suit</b>.</div>
+          <div class="callout blue"><b>13</b> cards in every <b>hand</b>.</div>
+          <div class="callout c-teal"><b>40</b> high card points in the deck.</div>
+          <p>You can see two hands — yours and dummy’s. Every card the opponents play is another clue. Subtract what you know from 13 (or from 40), and what’s left is the answer.</p>
+          <p class="big">In this lesson you play two whole deals, card by card, with a detective’s notebook.</p>`,
+      },
+
+      /* ===== Deal 1 ===== */
+      {
+        t: 'teach', title: 'Deal 1 · Count their POINTS',
+        html: `<p>You are South, declarer in <b>4♠</b>. <b>West dealt and passed.</b> Then North opened 1♦, you bid 1♠, North raised to 2♠, and you jumped to game.</p>
+          ${board(A, 0)}
+          <ul><li><b>Top and bottom:</b> dummy’s cards and yours.</li>
+            <li><b>Middle:</b> the trick being played.</li>
+            <li><b>Left and right:</b> every card West and East have played so far.</li>
+            <li><b>📓 Notebook:</b> what a detective has worked out.</li></ul>
+          <div class="callout">Your problem: the <b>♠Q</b> is missing, and you could finesse <b>either</b> opponent for it. Which one? Don’t guess — count!</div>`,
+      },
+      Q(A, 0, {
+        kicker: 'Deal 1 · Before you play', q: 'First, count to 40. You have 14 HCP and dummy has 13. How many HCP do the two opponents have together?',
+        choices: [11, 13, 14, 27], ans: A.oppHcp, b: { hideHcp: 'WE' },
+        why: '14 + 13 = 27 for your side. 40 − 27 = 13 for the opponents.',
+      }),
+      Q(A, 0, {
+        kicker: 'Deal 1 · Remember the auction', auction4: A_AUCTION,
+        q: 'West was the DEALER — and passed. What is the MOST West can have?',
+        choices: ['9 HCP', '11 HCP', '12 HCP', '13 HCP'], a: 1,
+        why: 'With 12 or more, West would have opened the bidding. A pass as dealer means 11 or fewer. Keep that number in your head!',
+      }),
+      Q(A, 9, {
+        kicker: 'Deal 1 · Trick 3', q: 'West leads the <b>♣A</b>, then the <b>♣K</b> — both win. Now West leads the <b>♣Q</b>. Count West’s points: how many HCP has West shown so far?',
+        choices: [7, 9, 10, 12], ans: A.at(9).seen.W, b: { hideHcp: 'W' },
+        why: 'Ace = 4, king = 3, queen = 2. That’s 4 + 3 + 2 = 9 HCP.',
+      }),
+      Q(A, 12, {
+        kicker: 'Deal 1 · Trick 3 is over', q: 'Three rounds of clubs — and every player followed suit all three times. Now count the CARDS: how many clubs are still out?',
+        choices: [0, 1, 2, 4], ans: A.at(12).stillOut.C, b: { hideOut: 'C' },
+        why: '3 rounds × 4 players = 12 clubs played. A suit has 13 cards, so exactly 1 club is still out (it’s the ♣10).',
+      }),
+      Q(A, 12, {
+        kicker: 'Deal 1 · Think', layout: 'wide',
+        q: 'The defenders have 3 tricks, so you can’t lose another one. You MUST find the ♠Q. West has shown 9 HCP and can have 11 at most. The ♠Q is worth 2. Could West still be holding it?',
+        choices: ['Yes — 9 + 2 = 11, and 11 is still possible', 'No — West has too many points already', 'No — East always has the queen'], a: 0,
+        why: 'A careful detective doesn’t jump to conclusions. 9 + 2 = 11, and West would pass with 11. You need one more clue…',
+      }),
+      Q(A, 13, {
+        kicker: 'Deal 1 · Trick 4', q: 'West switches to the <b>♥J</b>. A new clue! How many HCP has West shown now?',
+        choices: [9, 10, 11, 12], ans: A.at(13).seen.W, b: { hideHcp: 'W' },
+        why: 'The jack is 1 more point: 9 + 1 = 10 HCP.',
+      }),
+      Q(A, 13, {
+        kicker: 'Deal 1 · Case closed', layout: 'wide',
+        q: 'West has shown 10 HCP. NOW could West have the ♠Q?',
+        choices: ['No — 10 + 2 = 12, and West would have opened', 'Yes — West has all the high cards', 'It’s still a 50-50 guess'], a: 0,
+        why: 'With the ♠Q West would have had 12 HCP — enough to open. But West PASSED. So the ♠Q is with EAST. You know where it is, and you haven’t played a single trump yet!',
+      }),
+      Q(A, 16, {
+        kicker: 'Deal 1 · Make a plan', layout: 'wide',
+        q: 'Dummy’s ♥K wins the trick, so you are in dummy (North). East has the ♠Q. How do you trap it?',
+        choices: ['Play dummy’s ♠K, then lead the ♠J — and let it run if East plays low', 'Play your ♠A, then lead a low spade toward dummy’s ♠J', 'Play the ♠A and ♠K and hope the queen falls'], a: 0,
+        whyWrong: { 1: 'That finesse works only when WEST has the queen — it goes the wrong way.', 2: 'The queen falls only if East started with one or two spades. Why hope, when you KNOW where it is?' },
+        why: 'Make the player with the queen play BEFORE you decide. Lead spades from dummy, through East.',
+      }),
+      Q(A, 20, {
+        kicker: 'Deal 1 · Trick 5 is over', q: 'Dummy’s ♠K wins and everybody follows. Count the TRUMPS: you and dummy started with 8 spades, so the opponents started with 5. How many do they have now?',
+        choices: [1, 2, 3, 4], ans: A.at(20).stillOut.S, b: { hideOut: 'S' },
+        why: 'Two of their five trumps were just played (the ♠3 and the ♠2). 5 − 2 = 3 still out: the ♠Q, ♠8 and ♠7.',
+      }),
+      Q(A, 22, {
+        kicker: 'Deal 1 · Trick 6', layout: 'wide',
+        q: 'Dummy leads the <b>♠J</b> and East plays the <b>♠8</b>. Your turn. Which card do you play?',
+        choices: ['The ♠9 — let the jack ride', 'The ♠A — just to be safe'], a: 0,
+        whyWrong: { 1: 'If you play the ace, East’s queen becomes a winner — and that is the fourth trick for the defense.' },
+        why: 'You counted, so you KNOW East has the queen. Play low and the ♠J wins the trick!',
+      }),
+      {
+        t: 'teach', title: 'Deal 1 · Bid and made!',
+        html: `<p>The ♠J won (West followed, so only <b>one</b> trump was still out — the queen). Then a spade to your ace captured it. The rest of the tricks are yours.</p>
+          ${board(A, 28)}
+          <p>Here are all four hands. Check the notebook against them!</p>`,
+        deal: A.spec.hands, dealOpts: { contract: '4S', declarer: 'S', you: 'S' },
+        html2: `<div class="callout c-green"><b>How the detective did it:</b> 40 HCP in the deck → they have 13. West passed as dealer → 11 at most. West showed A + K + Q + J = 10 → no room for the ♠Q. So East has it.</div>
+          <div class="callout">And count trumps every single hand: they had <b>5</b>… then <b>3</b>… then <b>1</b>… then <b>0</b>.</div>`,
+      },
+
+      /* ===== Deal 2 ===== */
+      {
+        t: 'teach', title: 'Deal 2 · Count their CARDS',
+        html: `<p>New deal. You opened <b>1NT</b> and partner raised to <b>3NT</b>. West leads the <b>♥K</b>.</p>
+          ${board(Bd, 1)}
+          <p>Count your sure tricks: ♠A K, ♥A, ♦A K Q and ♣A K. That’s <b>8</b>. Trick number 9 can be the <b>♣J</b> — if you can find the ♣Q. And you can finesse <b>either</b> opponent for it.</p>
+          <div class="callout">This time the big clue is not points. It is <b>shape</b>. Watch for the moment someone <b>can’t follow suit</b> — the table marks that suit <b class="cb-out">OUT</b>.</div>`,
+      },
+      Q(Bd, 1, {
+        kicker: 'Deal 2 · Trick 1', q: 'Start with hearts. You have 3 hearts and dummy has 2. How many hearts do the two opponents have together?',
+        choices: [5, 6, 8, 10], ans: Bd.len('W', 'H') + Bd.len('E', 'H'), b: { hideOut: 'H' },
+        why: '13 − 3 − 2 = 8. The opponents have eight hearts between them. But how are they split?',
+      }),
+      Q(Bd, 11, {
+        kicker: 'Deal 2 · Trick 3', q: 'You hold up your ♥A twice, like you learned in Card Play 3. West leads a third heart, the <b>♥J</b> — and East throws a spade! East is OUT of hearts, so East started with only 2. How many hearts did West start with?',
+        choices: [4, 5, 6, 7], ans: Bd.len('W', 'H'), b: { known: 'EH' },
+        why: '13 − 2 (dummy) − 3 (you) − 2 (East) = 6. Write it in the notebook: West 6 hearts, East 2.',
+      }),
+      Q(Bd, 18, {
+        kicker: 'Deal 2 · Trick 5', q: 'You win the ♥A and play the ♠A — everyone follows. Then on your <b>♠K</b>, West throws a diamond! West started with just 1 spade. You had 4 and dummy had 3. How many spades did East start with?',
+        choices: [3, 4, 5, 6], ans: Bd.len('E', 'S'), b: { known: 'WH EH WS' },
+        why: '13 − 4 (you) − 3 (dummy) − 1 (West) = 5. East started with five spades.',
+      }),
+      Q(Bd, 20, {
+        kicker: 'Deal 2 · Check the notebook', q: 'Every HAND has 13 cards too. West started with 6 hearts and 1 spade. How many cards did West start with in diamonds and clubs TOGETHER?',
+        choices: [4, 5, 6, 7], ans: Bd.len('W', 'D') + Bd.len('W', 'C'), b: { known: 'WH EH WS ES' },
+        why: '13 − 6 − 1 = 6. West has six cards in the minor suits. If you can count the diamonds, you will know the clubs!',
+      }),
+      Q(Bd, 30, {
+        kicker: 'Deal 2 · Trick 8', q: 'So you play diamonds: the ace, the king… and on dummy’s <b>♦Q</b>, East throws a spade. East started with 2 diamonds. You had 3 and dummy had 3. How many diamonds did West start with?',
+        choices: [3, 4, 5, 6], ans: Bd.len('W', 'D'), b: { known: 'WH EH WS ES ED' },
+        why: '13 − 3 (you) − 3 (dummy) − 2 (East) = 5. West started with five diamonds.',
+      }),
+      Q(Bd, 32, {
+        kicker: 'Deal 2 · The last suit', q: 'Here is the big moment. West started with 1 spade, 6 hearts and 5 diamonds. How many CLUBS did West start with?',
+        choices: [0, 1, 2, 3], ans: Bd.len('W', 'C'), b: { known: 'WH EH WS ES WD ED' },
+        why: '1 + 6 + 5 = 12 cards. A hand has 13, so West has exactly ONE club.',
+      }),
+      Q(Bd, 32, {
+        kicker: 'Deal 2 · The last suit', q: 'And East? East started with 5 spades, 2 hearts and 2 diamonds. How many clubs did East start with?',
+        choices: [2, 3, 4, 5], ans: Bd.len('E', 'C'), b: { known: 'WH EH WS ES WD ED WC' },
+        why: '5 + 2 + 2 = 9, and 13 − 9 = 4. East has four clubs. (Check: you 3 + dummy 5 + West 1 + East 4 = 13.)',
+      }),
+      Q(Bd, 32, {
+        kicker: 'Deal 2 · Make a plan', layout: 'wide',
+        q: 'West has exactly ONE club and East has FOUR. You are in dummy (North). How do you play the clubs to be SURE of three club tricks?',
+        choices: ['Play dummy’s ♣K, then lead a low club from dummy and play your ♣J', 'Play your ♣A, then lead the ♣J and let it run', 'Play the ♣A and ♣K and hope the queen falls'], a: 0, b: { known: 'WH EH WS ES WD ED WC EC' },
+        whyWrong: { 1: 'That finesse goes through WEST — but West has only one club. If it isn’t the queen, East’s queen wins.', 2: 'East has four clubs, so the queen will not fall under the ace and king.' },
+        why: 'The ♣K makes West play their only club. If it is the queen — great! If not, East has the queen for certain, and East has to play before your ♣J.',
+      }),
+      Q(Bd, 36, {
+        kicker: 'Deal 2 · Trick 9', layout: 'wide',
+        q: 'Dummy’s ♣K wins. West follows with the <b>♣7</b> — West’s one and only club. Who has the ♣Q?',
+        choices: ['East — for certain', 'West', 'Nobody can know'], a: 0, b: { known: 'WH EH WS ES WD ED WC EC' },
+        why: 'West’s only club was the 7. Every club still out belongs to East: the ♣Q, ♣9 and ♣8. Counting turned a guess into a sure thing.',
+      }),
+      Q(Bd, 38, {
+        kicker: 'Deal 2 · Trick 10', layout: 'wide',
+        q: 'Dummy leads the <b>♣2</b> and East plays the <b>♣8</b>. Which card do you play?',
+        choices: ['The ♣J — it is sure to win', 'The ♣A — just to be safe'], a: 0, b: { known: 'WH EH WS ES WD ED WC EC' },
+        whyWrong: { 1: 'Then East’s ♣Q wins a club trick later, and you finish with only 8 tricks — down one.' },
+        why: 'West has no clubs left, so nobody can beat your ♣J. It is not a finesse any more — it is a sure thing!',
+      }),
+      {
+        t: 'teach', title: 'Deal 2 · Nine tricks!',
+        html: `<p>The ♣J won, and your ♣A was trick number nine. <b>3NT bid and made.</b></p>
+          ${board(Bd, 44, { known: 'WH EH WS ES WD ED WC EC' })}
+          <p>Here are all four hands. Was the notebook right?</p>`,
+        deal: Bd.spec.hands, dealOpts: { contract: '3N', declarer: 'S', you: 'S' },
+        html2: `<div class="callout c-green"><b>How the detective did it:</b> play the other suits first and watch who runs out. Hearts: West 6. Spades: West 1. Diamonds: West 5. That is 12 cards — so West had just <b>1</b> club.</div>`,
+      },
+      {
+        t: 'teach', title: 'Counting tips',
+        owl: 'Nobody counts everything on day one. Start with ONE suit — and count it on every single hand.',
+        html: `<div class="callout c-black"><b>1. Count the trumps first.</b> “They started with 5.” Then count down as they are played: 5… 3… 1… 0.</div>
+          <div class="callout blue"><b>2. Watch for someone showing out.</b> The moment a player can’t follow suit, you know that suit exactly: 13 minus the three hands you know.</div>
+          <div class="callout c-teal"><b>3. Add up their points.</b> Remember the auction — who opened, who passed — and count each ace, king, queen and jack they show.</div>
+          <div class="callout c-green"><b>4. Leave the guess for last.</b> Play the other suits first. The more cards you see, the less you have to guess.</div>`,
+      },
+      {
+        t: 'mc', challenge: true,
+        challengeNote: 'Defenders can count too! Use what declarer’s bidding told you.',
+        q: 'You are WEST, defending 3NT. South opened 1NT, which shows 15 to 17 HCP. Dummy comes down with 10 HCP, and you have 9. How many HCP does your PARTNER have?',
+        choices: ['0 to 2', '4 to 6', '8 to 10', '12 or more'], a: 1,
+        why: '40 − 10 (dummy) − 9 (you) = 21 HCP for declarer and partner together. Declarer has 15 to 17 of them, so partner has 4 to 6 — about one ace, or a king and a jack. Now you know what to hope for!',
+      },
+    ],
+  };
+})();
+
+</script>
+  <script>
+/* Final Boss 2: Club Hands — four deals from the Atlanta Duplicate Bridge Club Open Pairs, Saturday, November 14, 2026
+   (set CG-2026-1086-1714), chosen and adjusted by the teacher.  13 graded + challenge.
+     Board 3  — rotated so the kid (originally West) sits South: overcall 1♠, compete to 3♠, declare 3♠.
+     Board 21 — rotated the same way: balance over 1♣ (overcall or double?), bid 4♠, declare 4♠.
+     Board 10 — the kid is South, defending 3NT.  Teacher's changes: ♣K from South to West, ♦5 from West to South.
+                Hold up the ♠A once (partner's count signal says declarer has two), win the second round.
+     Board 26 — the kid is North, on lead against 3NT.  Teacher's changes: ♦3 S→E, ♠4 E→S, ♣4 S→N, ♥6 N→S.
+                West is made the dealer so the auction 1♦–1♥–1NT–3NT works.  A low spade lead beats it; ♠A or ♠K lets it make.
+   Declarer lines (Boards 3, 21) were found against the bot defenders and are re-checked by tests/dealplay.js.
+   Defense scripts (Boards 10, 26) were checked with a double-dummy solver; tests/check.js replays them card by card. */
+(function () {
+  const ch = (who, b) => ({ who, b });
+  const B3 = { N: 'J864.K8532.QT.86', E: 'K5.Q.J953.AK9542', S: 'AQ973.A964.8.QT7', W: 'T2.JT7.AK7642.J3' };
+  const B21 = { N: 'K7.T96.64.AQ8753', E: '2.52.QJT8752.J94', S: 'JT9543.AK87.AK.T', W: 'AQ86.QJ43.93.K62' };
+  const B10 = { N: '764.KQ875.A6.T62', E: 'KQJ53.J6.QJT.983', S: 'A82.942.K542.754', W: 'T9.AT3.9873.AKQJ' };
+  const B26 = { N: 'AK953.73.T872.74', E: 'J72.K984.QJ3.KQ8', S: 'T4.QJ65.A9.T6532', W: 'Q86.AT2.K654.AJ9' };
+
+  BQ_LESSONS.boss2 = {
+    id: 'boss2', icon: '🏆', title: 'Final Boss 2: Club Hands',
+    steps: [
+      {
+        t: 'teach', title: 'Final Boss 2 🏆 Real club hands',
+        owl: 'These four deals were played at the Atlanta Duplicate Bridge Club. Now it’s your turn!',
+        html: `<p>You will use <b>everything</b> from this section: overcalls, doubles, competing, card play, counting and signals.</p>
+          <ul><li><b>Boards 3 and 21:</b> you bid, then <b>declare</b> — you play your hand and dummy, the computer defends.</li>
+            <li><b>Boards 10 and 26:</b> you <b>defend</b>. The cards play themselves until it’s time for <b>your</b> decision.</li></ul>
+          <div class="callout">To make the screens easy, you always sit at the bottom of the table — the <b>South</b> seat on Boards 3, 21 and 10, and <b>North</b> on Board 26.</div>`,
+      },
+
+      /* ---------- Board 3 ---------- */
+      { t: 'bid', kicker: '🏆 Board 3 — East deals, you are South', q: 'East opens 1♣. What do you bid?', hand: B3.S, dbl: true, ladder: 'ocvx',
+        auction: [ch('East', '1C'), ch('You', '?')], a: '1S', ok: ['X'],
+        whyWrong: { X: 'A double asks partner to pick a suit — but you have a good FIVE-card major. Show it!', P: 'With 12 HCP and a good five-card suit, get in there!' },
+        why: '12 HCP and ♠A-Q-9-7-3: a good five-card major. Overcall 1♠ (remember 10-5-2).' },
+      { t: 'bid', kicker: '🏆 Board 3 — you are South', q: 'West bids 2♦, partner raises to 2♠, and East bids 3♦. What now?', hand: B3.S, dbl: true, levels: 4,
+        auction: [ch('East', '1C'), ch('You', '1S'), ch('West', '2D'), ch('Partner', '2S'), ch('East', '3D'), ch('You', '?')], a: '3S', ok: ['P'],
+        whyWrong: { P: 'Partner would bid 3♠ for you — but this is YOUR decision to make. Don’t sell out to 3♦!', X: 'Partner raised spades — play in your fit!' },
+        why: 'Partner’s raise shows 3+ spades, so you have at least 8 together — and you have a singleton diamond. Don’t let them play 3♦. Compete to <b>3♠</b>.' },
+      {
+        t: 'dealplay', kicker: '🏆 Board 3 — play 3♠ (you are South)', contract: '3S', trump: 'S', declarer: 'S', lead: 'W', goal: 9, hands: B3,
+        solution: ['DT', 'D8', 'DQ', 'S3', 'H4', 'HK', 'S4', 'SQ', 'SA', 'S6', 'HA', 'H2', 'H6', 'H3', 'C6', 'C7', 'S7', 'C8', 'H9', 'H5', 'CT', 'S8', 'H8', 'CQ', 'SJ', 'S9'],
+        q: 'You are declarer in 3♠ (South). West makes the opening lead. Take 9 tricks!',
+        plan: 'Listen to the auction: EAST opened, so East has the missing ♠K. Trump the second diamond, get to dummy with the ♥K, and lead a spade toward your ♠A-Q. When East plays low, finesse the ♠Q. Then cash the ♠A.',
+        why: 'East opened the bidding, so the ♠K was with East — sitting in FRONT of your A-Q. Leading from dummy toward your A-Q made the finesse work.',
+      },
+
+      /* ---------- Board 21 ---------- */
+      { t: 'bid', kicker: '🏆 Board 21 — West deals, you are South', q: 'West opens 1♣. Partner and East both pass. What do you bid?', hand: B21.S, dbl: true,
+        auction: [ch('West', '1C'), ch('Partner', 'P'), ch('East', 'P'), ch('You', '?')], a: '1S', ok: ['X'],
+        whyWrong: {
+          X: 'A double is close — you do have four hearts. But partner will often answer in hearts or diamonds, and then bidding your spades later would show 18+ HCP. With SIX spades, show them right away.',
+          P: 'Don’t let them play 1♣! You have 15 HCP and six spades.',
+        },
+        why: 'Six spades and 15 HCP: overcall <b>1♠</b>. Your spades are weak in honors, but a six-card major is the most important thing to show partner.' },
+      { t: 'bid', kicker: '🏆 Board 21 — you are South', q: 'Partner advances 1NT. What do you bid now?', hand: B21.S, levels: 4,
+        auction: [ch('West', '1C'), ch('Partner', 'P'), ch('East', 'P'), ch('You', '1S'), ch('West', 'P'), ch('Partner', '1N'), ch('East', 'P'), ch('You', '?')], a: '4S', ok: ['3S'],
+        whyWrong: { '3S': '3♠ only invites. You have enough to bid game yourself.', P: 'You have too much to stop in 1NT!' },
+        why: 'Partner’s 1NT shows about 8–10 HCP and a club stopper. 15 + 8 = 23 at least — plus your six-card suit is worth 2 more. He who knows, goes: <b>4♠</b>!' },
+      {
+        t: 'dealplay', kicker: '🏆 Board 21 — play 4♠ (you are South)', contract: '4S', trump: 'S', declarer: 'S', lead: 'W', goal: 10, hands: B21,
+        solution: ['D4', 'DK', 'SJ', 'SK', 'S7', 'S9', 'CA', 'CT', 'H6', 'HK', 'ST', 'C3', 'DA', 'D6', 'S3', 'C5', 'C7', 'S4', 'S5', 'H9', 'HA', 'HT', 'H7', 'C8', 'CQ', 'H8'],
+        q: 'You are declarer in 4♠ (South). West makes the opening lead. Take 10 tricks!',
+        plan: 'Count losers: spades 2 (West opened, so West has the ♠A and the ♠Q), hearts 1, clubs 0 (trump them). That is 3 — you can afford it. Lead the ♠J: if West covers with the Q, dummy’s K wins. Draw trumps, cash the ♥A K, and trump your club losers.',
+        why: 'You lose two trumps and one heart — no more. Counting losers before you play makes 4♠ easy.',
+      },
+
+      /* ---------- Board 10 ---------- */
+      {
+        t: 'defplay', kicker: '🏆 Board 10 — you are South, defending 3NT', contract: '3N', declarer: 'W', you: 'S', first: 'N', hands: B10,
+        auction4: { dealer: 'E', calls: ['P', 'P', '1N', 'P', '2H', 'P', '2S', 'P', '3N', 'P', 'P', 'P'], you: 'S' },
+        q: 'West opened 1NT. East’s 2♥ was a <b>transfer</b> (five spades), then East bid 3NT. Partner leads the ♥7. You are South. Defend!',
+        script: ['H7', 'H6', 'H9', 'HT', 'ST', 'S4', 'SJ', 'S2', 'SQ', 'SA', 'S9', 'S6', 'H4', 'H3', 'HQ', 'HJ', 'HK', 'C3', 'H2', 'HA', 'CA', 'C2', 'C8', 'C4', 'CK', 'C6', 'C9', 'C5', 'CQ', 'CT', 'S3', 'C7', 'CJ', 'S7', 'S5', 'D2', 'D9', 'D6', 'DT', 'DK', 'D5', 'D3', 'DA', 'DJ', 'H8', 'DQ', 'D4', 'D7', 'H5', 'SK', 'S8', 'D8'],
+        stops: [
+          {
+            at: 2, q: 'Partner leads the ♥7 and dummy plays the ♥6. Which heart do you play?', qShort: 'Board 10, trick 1: partner leads the ♥7, dummy plays low',
+            a: ['H9'], whyWrong: { H2: 'Nobody on your side is winning this trick yet — third hand HIGH!', H4: 'Nobody on your side is winning this trick yet — third hand HIGH!' },
+            why: 'Third hand high: the ♥9 makes declarer use a high card to win the trick.',
+          },
+          {
+            at: 7,
+            mc: {
+              q: 'Declarer leads the ♠10 and partner plays the ♠4. Dummy has ♠K Q J 5 3 and you have ♠A 8 2 — so the ♠4 is partner’s LOWEST spade: a count signal for an odd number, three. How many spades does DECLARER have?',
+              choices: ['2', '3', '4'], a: 0,
+              why: 'Count the suit: 13 − 5 (dummy) − 3 (you) − 3 (partner) = 2. Declarer started with just two spades.',
+            },
+            q: 'Dummy plays the ♠J. Declarer has two spades, and dummy has no other way to get to its spades. Do you take your ♠A now?', qShort: 'Board 10: declarer leads the first spade toward dummy’s K Q J 5 3',
+            a: ['S2', 'S8'],
+            whyWrong: { SA: 'If you win now, declarer still has a spade left to lead over to dummy — and dummy’s ♠K Q 5 3 all win. Declarer takes 10 tricks!' },
+            why: 'Hold up! Duck this round. Take your ace when declarer plays the LAST spade.',
+          },
+          {
+            at: 9, q: 'Dummy’s ♠J won. Now dummy leads the ♠Q. Declarer has ONE spade left. What do you play?', qShort: 'Board 10: dummy leads the second spade',
+            a: ['SA'],
+            whyWrong: { S8: 'Duck again and dummy’s ♠Q wins a second trick. You would still beat 3NT by one — but taking your ace now holds dummy to just ONE spade trick.' },
+            why: 'Take it NOW: declarer’s last spade is played on this trick. After this, dummy’s ♠K 5 3 are stuck in dummy — it has no other way in.',
+          },
+          {
+            at: 12, q: 'You won the ♠A. What do you lead?', qShort: 'Board 10: you won the ♠A — what do you lead?',
+            a: ['H4'], ok: ['H2'],
+            whyWrong: { H2: 'Right suit! But with two cards left, return the TOP one.', C7: 'Declarer has the ♣A K Q J — clubs won’t help your side.', C5: 'Declarer has the ♣A K Q J — clubs won’t help your side.', C4: 'Declarer has the ♣A K Q J — clubs won’t help your side.', DK: 'Your ♦K is a trick later. Help partner set up hearts first.', D5: 'Partner led hearts — go back to partner’s suit!', D4: 'Partner led hearts — go back to partner’s suit!', D2: 'Partner led hearts — go back to partner’s suit!', S8: 'Spades are dummy’s suit — don’t help declarer!' },
+            why: 'Return partner’s suit! You have two hearts left, so lead the top one: the ♥4. Partner’s hearts will set up, and partner has the ♦A to get back in.',
+          },
+        ],
+        why: 'Partner’s count signal (the ♠4) told you declarer had two spades. So you ducked once and won the second round — and dummy’s long spades never took another trick. Declarer needed 9 tricks and got only 7.',
+      },
+
+      /* ---------- Board 26 ---------- */
+      { t: 'bid', kicker: '🏆 Board 26 — West deals, you are North', seat: 'N', q: 'West opens 1♦. What do you bid?', hand: B26.N, dbl: true,
+        auction: [ch('West', '1D'), ch('You', '?')], a: 'P', also: ['1S'],
+        whyWrong: { X: 'A takeout double needs opening points and support for the other suits. You have 7 HCP and two hearts.' },
+        why: 'Both are fine! With 7 HCP, Pass is normal. But ♠A K 9 5 3 is a GREAT suit, and an overcall tells partner what to lead — so 1♠ is fine too.' },
+      {
+        t: 'defplay', kicker: '🏆 Board 26 — you are North, on lead against 3NT', contract: '3N', declarer: 'W', you: 'N', first: 'N', hands: B26,
+        auction4: { dealer: 'W', calls: ['1D', 'P', '1H', 'P', '1N', 'P', '3N', 'P', 'P', 'P'], you: 'N' },
+        q: 'West opened 1♦, East responded 1♥, West rebid 1NT and East bid 3NT. (If you overcalled 1♠, East made a <b>negative double</b> — “I have four hearts” — and the rest was the same.) You make the opening lead.',
+        script: ['S5', 'S2', 'ST', 'SQ', 'D4', 'D2', 'DQ', 'DA', 'S4', 'S8', 'SK', 'S7', 'SA', 'SJ', 'C2', 'S6', 'S9', 'D3', 'C3', 'H2', 'DT', 'DJ', 'D9', 'D5', 'CK', 'C5', 'C9', 'C4', 'HK', 'H5', 'HT', 'H3', 'CQ', 'C6', 'CJ', 'C7', 'H9', 'H6', 'HA', 'H7', 'CA', 'S3', 'C8', 'CT', 'DK', 'D7', 'H4', 'HJ', 'D6', 'D8', 'H8', 'HQ'],
+        stops: [
+          {
+            at: 0, q: 'What is your opening lead?', qShort: 'Board 26: your opening lead against 3NT',
+            a: ['S5'], ok: ['S3'],
+            whyWrong: {
+              SA: 'Cashing the ♠A and ♠K takes two tricks — but then declarer’s ♠Q stops the suit, and you have no other card to get back in. Declarer makes 3NT!',
+              SK: 'Cashing the ♠K and ♠A takes two tricks — but then declarer’s ♠Q stops the suit, and you have no other card to get back in. Declarer makes 3NT!',
+              S3: 'Right idea — a low spade! From a long suit, the 4th card from the top is the usual lead: A, K, 9, <b>5</b>.',
+              S9: 'Lead LOW from your long suit — the 4th card from the top.',
+            },
+            why: 'Against notrump, lead your long suit — and lead LOW: the 4th card from the top, the ♠5. You keep your ♠A K to take tricks later, and partner keeps a spade to lead back to you.',
+          },
+          {
+            at: 10, challenge: true,
+            q: 'Partner won the ♦A and led back the ♠4. Declarer plays the ♠8. Dummy still has ♠J 7. Which spade do you play?', qShort: 'Board 26: partner returns a spade, declarer plays the ♠8',
+            a: ['SK', 'SA'],
+            whyWrong: {
+              S9: '“Only as high as you need” — but DUMMY plays after you, and dummy’s ♠J beats your 9!',
+              S3: 'Dummy plays after you, and dummy’s ♠J would win the trick!',
+            },
+            why: 'Win with a top spade — dummy’s ♠J plays AFTER you. Then cash your other top spade: dummy’s J falls, declarer is out, and your ♠9 and ♠3 are winners too.',
+          },
+        ],
+        why: 'Your low lead kept a spade in partner’s hand. When partner got in with the ♦A, partner led it back THROUGH declarer — and you took four spade tricks. If you had led the ♠A or ♠K, declarer would have made 3NT.',
+      },
+    ],
+  };
+})();
+
+</script>
+  <script>
 /* Bridge Quest - app engine: players & scores (localStorage), screens, lesson runner. */
 (function () {
   const B = window.Bridge;
@@ -4430,6 +5177,14 @@ BQ_LESSONS.basics = {
       rows += '<tr>' + cols.map((_, j) => `<td>${cells[i + j] != null && cells[i + j] !== '' ? bidHTML(cells[i + j]) : ''}</td>`).join('') + '</tr>';
     }
     return `<table class="auction4"><tr>${cols.map((s) => `<th class="${s === a.you ? 'you' : ''}">${SEATNAME[s]}<div>${roleOf(s, a.you)}</div></th>`).join('')}</tr>${rows}</table>`;
+  }
+  // Your seat in a step (default South).  A {who, b} auction is drawn as the W-N-E-S table, so every player's calls
+  // line up in their own column.  The first 'You' call fixes where everybody sits.
+  const SEATLETTER = { North: 'N', East: 'E', South: 'S', West: 'W' };
+  const seatOf = (st) => st.seat || SEATLETTER[((st.kicker || '').match(/you are (North|East|South|West)/) || [])[1]] || 'S';
+  function auctionSeats(calls, you) {
+    const k = Math.max(0, calls.findIndex((c) => c.who === 'You'));
+    return { dealer: B.nextSeat(you, (4 - (k % 4)) % 4), calls: calls.map((c) => c.b), you };
   }
   function contractHTML(c, declarer) {
     return `<div class="contract-badge">Contract: <b>${bidHTML(c)}</b>${declarer ? ` &nbsp;by ${SEATNAME[declarer]}` : ''}</div>`;
@@ -4769,10 +5524,10 @@ BQ_LESSONS.basics = {
     let v = '';
     if (st.contract) v += contractHTML(st.contract, st.declarer);
     if (st.auction4) v += auction4HTML(st.auction4);
-    if (st.auction) v += auctionHTML(st.auction);
+    if (st.auction) v += auction4HTML(auctionSeats(st.auction, seatOf(st)));
     if (st.trick && st.t !== 'trick') v += trickHTML(st.trick, { youMark: true });
     if (st.dummyCards) v += '<div style="margin-bottom:10px">' + handBox(st.dummyCards, st.dummyLabel || 'Dummy') + '</div>';
-    if (st.hand && !['lead', 'pickcard'].includes(st.t)) v += handBox(st.hand, st.handLabel || 'Your hand');
+    if (st.hand && !['lead', 'pickcard'].includes(st.t)) v += handBox(st.hand, st.handLabel || `${SEATNAME[seatOf(st)]} · Your hand`);
     if (st.diagram) v += st.diagram;
     return v;
   }
@@ -4786,7 +5541,7 @@ BQ_LESSONS.basics = {
       <h2>${fmt(st.title)}</h2>
       ${st.owl ? `<div class="owl-row" style="margin-bottom:10px"><div class="owl">${OWL}</div><div class="bubble">${fmt(st.owl)}</div></div>` : ''}
       <div>${fmt(st.html)}</div>
-      ${st.hand ? `<div style="margin-top:10px">${handBox(st.hand, st.handLabel)}</div>` : ''}
+      ${st.hand ? `<div style="margin-top:10px">${handBox(st.hand, st.handLabel || `${SEATNAME[seatOf(st)]} · Your hand`)}</div>` : ''}
       ${st.cards ? `<div style="margin-top:10px">${handBox(st.cards, st.handLabel)}</div>` : ''}
       ${st.trick ? `<div style="margin-top:10px">${trickHTML(st.trick)}</div>` : ''}
       ${st.deal ? `<div style="margin-top:10px">${dealHTML(st.deal, st.dealOpts || {})}</div>` : ''}
@@ -4844,7 +5599,7 @@ BQ_LESSONS.basics = {
     wireLadder(panel);
     panel.querySelectorAll('.bidbox button').forEach((b) => (b.onclick = () => {
       const bid = b.dataset.b;
-      const value = bid === st.a ? 1 : (st.ok || []).includes(bid) ? 0.5 : 0;
+      const value = bid === st.a || (st.also || []).includes(bid) ? 1 : (st.ok || []).includes(bid) ? 0.5 : 0;
       panel.querySelectorAll('.bidbox button').forEach((x) => {
         x.disabled = true;
         if (x === b) x.classList.add(value === 1 ? 'pick-good' : 'pick-bad');
@@ -4910,7 +5665,7 @@ BQ_LESSONS.basics = {
   function cardPickStep(st, stage, isLead) {
     const answers = [].concat(st.a);
     const src = st.hand || st.cards;
-    const label = st.pickLabel || (isLead ? `Your hand${st.you ? ' (' + SEATNAME[st.you] + ')' : ''} — ${TOUCH ? 'tap' : 'click'} the card you lead` : `Your cards — ${TOUCH ? 'tap' : 'click'} the one you play`);
+    const label = st.pickLabel || (isLead ? `${SEATNAME[st.you || seatOf(st)]} · Your hand — ${TOUCH ? 'tap' : 'click'} the card you lead` : `Your cards — ${TOUCH ? 'tap' : 'click'} the one you play`);
     stage.innerHTML = `<div class="panel">${kickerHTML(st)}${ladderChip(st)}
       <div class="q-text">${fmt(st.q || (isLead ? 'What is your opening lead?' : 'Which card do you play?'))}</div>
       <div class="visual">${visualHTML(st)}</div>
@@ -5174,7 +5929,7 @@ BQ_LESSONS.basics = {
         if (!scored) { record(st, value, st.qShort || st.q, st.plan || ''); scored = true; }
         const title = value ? `You took ${g.tricks.NS} tricks — goal reached! 🎉` : `You took ${g.tricks.NS} of ${total} tricks. The goal was ${st.goal}.`;
         panel.querySelector('#fb').innerHTML = feedbackHTML(value, '', st.why, value ? '' : st.plan, title) +
-          `<div class="reveal"><div class="q-kicker">👀 All four hands at the start</div>${dealHTML(st.hands, { you: 'S' })}</div>`;
+          `<div class="reveal"><div class="q-kicker">👀 All four hands at the start</div>${dealHTML(st.hands, { you: st.declarer || 'S', contract: st.contract, declarer: st.declarer || 'S' })}</div>`;
         addNext(panel, null, nextStep);
         const r = panel.querySelector('.next-row');
         const again = document.createElement('button');
@@ -5185,6 +5940,124 @@ BQ_LESSONS.basics = {
       loop();
     }
     start();
+  };
+
+  /* --- defend a whole deal.  The cards follow a script (declarer's plan, partner's signals); at each stop YOU choose
+     the card — sometimes after a question about what you have seen.  Every other card plays itself.
+     st = { hands, contract, declarer, you, first (opening leader), script: [52 cards in play order],
+            stops: [{ at: index of your card in script, q, a: [best cards], ok, whyWrong, why,
+                      mc: { q, choices, a, why } (optional question asked first) }], why (shown at the end) } */
+  STEP.defplay = (st, stage) => {
+    const trump = st.contract[1] === 'N' ? null : st.contract[1];
+    const decl = st.declarer, dummy = B.nextSeat(decl, 2), you = st.you, partner = B.nextSeat(you, 2);
+    const ROLE = { [decl]: 'Declarer', [dummy]: 'Dummy', [you]: 'You', [partner]: 'Partner' };
+    const hands = {};
+    B.SEATS.forEach((s) => { const p = B.parseHand(st.hands[s]); hands[s] = B.SUITS.flatMap((su) => p[su].split('').map((r) => su + r)); });
+    const stopAt = {}; (st.stops || []).forEach((x) => (stopAt[x.at] = x));
+    let i = 0, leader = st.first, trick = [], last = null, fast = false, waiting = false;
+    const won = { def: 0, decl: 0 }, mcDone = {}, log = [];
+    const need = +st.contract[0] + 6;
+    stage.innerHTML = `<div class="panel">${kickerHTML(st)}
+      <div class="q-text">${fmt(st.q)}</div>
+      ${st.auction4 ? auction4HTML(st.auction4) : ''}
+      <div class="sp-wrap"><div id="dp-table"></div><div class="sp-side" id="dp-side"></div></div>
+      <div id="dp-ask"></div><div id="fb"></div></div>`;
+    const panel = stage.firstElementChild, ask = panel.querySelector('#dp-ask');
+    const seatNow = () => (trick.length ? B.nextSeat(trick[trick.length - 1].seat) : leader);
+    const legal = (seat) => { const h = hands[seat]; if (!trick.length) return h; const f = h.filter((c) => c[0] === trick[0].card[0]); return f.length ? f : h; };
+    function row(seat, pick) {
+      const L = pick ? legal(seat) : [];
+      const show = seat === you || i > 0;
+      const groups = suitRows(B.SUITS.map((su) => {
+        const cs = hands[seat].filter((c) => c[0] === su);
+        return { n: cs.length, html: '<div class="grp">' + cs.map((c) => cardHTML(c[1], c[0], { button: true, extra: pick ? (L.includes(c) ? 'playable' : 'dim') : '', disabled: !L.includes(c) })).join('') + '</div>' };
+      }));
+      return `<div class="sp-hand ${pick ? 'turn' : ''}"><div class="hand-label">${SEATNAME[seat]} · ${seat === you ? 'You' : 'Dummy'}${pick ? ' — your turn!' : ''}</div>
+        <div class="hand">${show ? groups || '<span style="color:#fff">no cards left</span>' : '<span style="color:#fff">(dummy goes down after the opening lead)</span>'}</div></div>`;
+    }
+    function draw(pick) {
+      const t = trick.length ? trick : (last || []);
+      const tt = { leader: t.length ? t[0].seat : leader, play: t.map((x) => x.card), trump, roles: ROLE };
+      panel.querySelector('#dp-table').innerHTML = row(dummy, false) + trickHTML(tt) + row(you, pick);
+      panel.querySelector('#dp-side').innerHTML = `<div class="contract-badge">Contract: <b>${bidHTML(st.contract)}</b> by ${SEATNAME[decl]}</div>
+        <div class="sp-score">Defense: <b>${won.def}</b> &nbsp;·&nbsp; Declarer: <b>${won.decl}</b><br><span class="muted" style="font-size:.9rem">Declarer needs ${need}. You need ${14 - need} to beat it.</span></div>
+        ${!pick && !waiting && i < 52 && !fast ? '<button class="btn small ghost" id="dp-skip">⏩ Skip ahead</button>' : ''}
+        <div class="sp-log">${log.map((l) => `<div>${fmt(l)}</div>`).join('')}</div>`;
+      const sk = panel.querySelector('#dp-skip'); if (sk) sk.onclick = () => { fast = true; draw(false); };
+      if (pick) panel.querySelectorAll('.sp-hand button.card.playable').forEach((b) => (b.onclick = () => choose(b.dataset.card)));
+    }
+    function put(card) {
+      const seat = seatNow();
+      hands[seat] = hands[seat].filter((c) => c !== card);
+      trick.push({ seat, card });
+      i++;
+      if (trick.length === 4) {
+        const w = B.trickWinner(trick[0].seat, trick.map((x) => x.card), trump);
+        const ours = w === you || w === partner;
+        won[ours ? 'def' : 'decl']++;
+        log.push(`${ours ? '✅' : '❌'} Trick ${won.def + won.decl}: ${cardText(trick.find((x) => x.seat === w).card)} (${ROLE[w]}) wins.`);
+        last = trick; trick = []; leader = w;
+        draw(false);
+        return setTimeout(() => { last = null; loop(); }, fast ? 60 : 1000);
+      }
+      draw(false);
+      setTimeout(loop, fast ? 30 : 550);
+    }
+    function loop() {
+      if (i >= 52) return end();
+      const stop = stopAt[i];
+      if (!stop) return put(st.script[i]);
+      fast = false;
+      if (stop.mc && !mcDone[i]) return askMC(stop);
+      waiting = true;
+      ask.innerHTML = `<div class="dp-ask"><div class="q-kicker">${stop.challenge ? '⭐ Challenge' : '🤔 Your decision'}</div><div class="q-text">${fmt(stop.q)}</div></div>`;
+      draw(true);
+      if (isPhone()) ask.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    function askMC(stop) {
+      const m = stop.mc;
+      waiting = true; draw(false);
+      ask.innerHTML = `<div class="dp-ask"><div class="q-kicker">🤔 Think first</div><div class="q-text">${fmt(m.q)}</div>
+        <div class="choices ${m.layout || 'wide'}">${m.choices.map((c, k) => `<button class="choice" data-i="${k}">${fmt(c)}</button>`).join('')}</div><div class="dp-fb"></div></div>`;
+      ask.querySelectorAll('.choice').forEach((b) => (b.onclick = () => {
+        const k = +b.dataset.i, value = k === m.a ? 1 : 0;
+        ask.querySelectorAll('.choice').forEach((x) => { x.disabled = true; const j = +x.dataset.i; if (j === k) x.classList.add(value ? 'good' : 'bad'); else if (j === m.a) x.classList.add('reveal'); });
+        record({ challenge: !!m.challenge }, value, m.q, m.choices[m.a]);
+        const box = ask.querySelector('.dp-fb');
+        box.innerHTML = feedbackHTML(value, '', m.why, value ? '' : m.choices[m.a]);
+        addNext(box, 'Continue ▶', () => { mcDone[i] = true; ask.innerHTML = ''; loop(); });
+      }));
+      if (isPhone()) ask.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    function choose(card) {
+      const stop = stopAt[i];
+      const best = [].concat(stop.a);
+      const value = best.includes(card) ? 1 : (stop.ok || []).includes(card) ? 0.5 : 0;
+      panel.querySelectorAll('.sp-hand button.card').forEach((x) => {
+        x.disabled = true; x.classList.remove('playable');
+        if (x.dataset.card === card) x.classList.add(value === 1 ? 'pick-good' : 'pick-bad');
+        else if (best.includes(x.dataset.card)) x.classList.add('pick-good');
+      });
+      const right = best.map(cardText).join(' or ');
+      record({ challenge: !!stop.challenge }, value, stop.qShort || stop.q, right);
+      let why = (value < 1 && stop.whyWrong && stop.whyWrong[card]) ? stop.whyWrong[card] + ' ' + stop.why : stop.why;
+      const play = st.script[i];
+      if (card !== play) why += ` <i>Let’s play the ${cardText(play)} and see how the hand goes.</i>`;
+      const box = ask.querySelector('.dp-ask');
+      box.insertAdjacentHTML('beforeend', '<div class="dp-fb">' + feedbackHTML(value, '', why, value < 1 ? right : '') + '</div>');
+      addNext(box.querySelector('.dp-fb'), 'Continue ▶', () => { ask.innerHTML = ''; waiting = false; put(play); });
+    }
+    function end() {
+      waiting = true; draw(false);
+      const down = need - won.decl;
+      const title = down > 0 ? `${bidHTML(st.contract)} down ${down} — you beat it! 🎉` : `Declarer made ${bidHTML(st.contract)}.`;
+      panel.querySelector('#fb').innerHTML = `<div class="feedback ${down > 0 ? 'good' : 'okay'}"><div class="fb-ic">${down > 0 ? '🛡️' : OWL}</div><div class="fb-body">
+          <div class="fb-title">${title}</div><div class="fb-why">${fmt(st.why || '')}</div></div></div>
+        <div class="reveal"><div class="q-kicker">👀 All four hands at the start</div>${dealHTML(st.hands, { you, contract: st.contract, declarer: decl })}</div>`;
+      addNext(panel, null, nextStep);
+    }
+    draw(false);
+    setTimeout(loop, 500);
   };
 
   /* ---------------- results ---------------- */
